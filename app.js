@@ -710,15 +710,63 @@ function configureSelectedRobot() {
 }
 
 // --- Assemble Collaborative Feed ---
+const creatorNames = {
+    'akmal': 'Akmal',
+    'wendy': 'Wendy',
+    'agung': 'Agung',
+    'ibnu': 'Ibnu'
+};
+
 function initializeStream() {
+    state.activeCreator = creatorNames[state.selectedChar] || 'Akmal';
+    
+    const isServed = window.location.protocol.startsWith('http');
+    if (isServed) {
+        console.log("Connecting to Real-Time SSE Stream at /api/stream...");
+        const eventSource = new EventSource('/api/stream');
+        
+        eventSource.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.type === 'init') {
+                    DOM.streamContainer.innerHTML = '';
+                    state.streamCards = [];
+                    // Populate initial historic cards in chronological order
+                    data.cards.forEach(card => {
+                        addCardToStream(card, false);
+                    });
+                } else if (data.type === 'new') {
+                    addCardToStream(data.card, true);
+                }
+            } catch (err) {
+                console.error("Failed to parse SSE payload", err);
+            }
+        };
+        
+        eventSource.onerror = (err) => {
+            console.warn("Real-time server connection unavailable. Running in simulated standalone mode.");
+            eventSource.close();
+            runOfflineSimulation();
+        };
+    } else {
+        runOfflineSimulation();
+    }
+}
+
+function runOfflineSimulation() {
+    DOM.streamContainer.innerHTML = '';
+    state.streamCards = [];
     simulatedTeammateCards.forEach((card, index) => {
         setTimeout(() => {
-            addCardToStream(card);
-        }, (index + 1) * 3000); // Stagger introduction of simulated cards
+            addCardToStream(card, true);
+        }, (index + 1) * 3000);
     });
 }
 
-function addCardToStream(card) {
+function addCardToStream(card, triggerPulse = false) {
+    // Prevent duplicate entries from self-broadcast
+    if (state.streamCards.some(c => c.id === card.id)) return;
+    
     state.streamCards.push(card);
     
     const cardEl = document.createElement('div');
@@ -742,9 +790,24 @@ function addCardToStream(card) {
     });
 
     DOM.streamContainer.prepend(cardEl);
+
+    // Dynamic Visual Spark alert for newly arrived asset
+    if (triggerPulse) {
+        cardEl.style.boxShadow = `0 0 20px ${card.type === 'css' ? 'var(--accent-cyan)' : 'var(--accent-yellow)'}`;
+        cardEl.style.transform = 'scale(1.02)';
+        setTimeout(() => {
+            cardEl.style.boxShadow = 'none';
+            cardEl.style.transform = 'none';
+        }, 1000);
+    }
+
+    // Auto-select card if it belongs to current active user profile
+    if (card.creator === state.activeCreator) {
+        selectCardForSlot(card);
+    }
 }
 
-// --- AI Generation Simulation Engine ---
+// --- AI Generation & Broadcast Engine ---
 function handleCodeGeneration() {
     const prompt = DOM.promptInput.value.trim();
     if (!prompt) return;
@@ -761,8 +824,27 @@ function handleCodeGeneration() {
         const activeRobot = robots[state.selectedRobot];
         const newCard = activeRobot.generate(prompt);
         
-        addCardToStream(newCard);
-        selectCardForSlot(newCard); // Auto-load user generated asset into active slot
+        // Dynamic creator details based on profile setup
+        newCard.creator = state.activeCreator;
+        newCard.avatarClass = state.selectedChar;
+        newCard.avatarSymbol = state.selectedRobot === 'Neon' ? '🎨' : '⚡';
+
+        const isServed = window.location.protocol.startsWith('http');
+        if (isServed) {
+            // Serve via Local server, POST to broadcast
+            fetch('/api/push', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newCard)
+            })
+            .catch(err => {
+                console.warn("Failed to POST card, adding locally instead.", err);
+                addCardToStream(newCard, true);
+            });
+        } else {
+            // Offline fallback
+            addCardToStream(newCard, true);
+        }
 
         // Restore button state
         btnText.textContent = "RUN ROBOT PIPELINE";
