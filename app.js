@@ -1,1060 +1,647 @@
 /* ==========================================================================
-   Turbo Robots // Fusion Lab — Central Application Engine
+   GitScreen AI — Core Application Logic & Classification Engine
    ========================================================================== */
 
-// --- Global Application State ---
-const state = {
-    selectedChar: 'akmal',
-    selectedRobot: 'Neon',
-    userPromptActive: false,
-    cssSlotCard: null,
-    jsSlotCard: null,
-    streamCards: [],
-    customComponentIndex: 1,
-    activeTab: 'html-css'
-};
-
-// --- Robots Configuration & Mock Generators ---
-const robots = {
-    Neon: {
-        avatar: '🎨',
-        name: 'NEON v3.5',
-        role: 'CSS Wizard',
-        desc: 'Specializes in glassmorphic layouts, aurora glows, and fluid responsive design.',
-        generate: (prompt) => {
-            const cleanPrompt = prompt.toLowerCase();
-            let name = "Visual Widget Layout";
-            let css = "";
-            let html = "";
-            let desc = "Custom styled design sheet.";
-
-            if (cleanPrompt.includes('clock') || cleanPrompt.includes('time')) {
-                name = "Glow Neon Clock Canvas";
-                desc = "Ultra-premium glassmorphic digital clock container with glowing numeric dials.";
-                html = `
-<div class="neon-clock-card">
-    <div class="clock-display">
-        <span id="hours">12</span><span class="colon">:</span><span id="minutes">45</span><span class="colon">:</span><span id="seconds">00</span>
-    </div>
-    <div class="clock-label">ESTABLISHED SESSION // TURBO TIME</div>
-    <button class="control-btn" id="btn-toggle-clock">PAUSE LOG</button>
-</div>`;
-                css = `
-.neon-clock-card {
-    background: rgba(13, 17, 33, 0.7);
-    border: 1px solid rgba(0, 242, 254, 0.3);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 242, 254, 0.1);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 2rem;
-    text-align: center;
-    width: 300px;
-    margin: 2rem auto;
-    font-family: 'Outfit', sans-serif;
-}
-.clock-display {
-    font-size: 2.5rem;
-    font-weight: 800;
-    font-family: 'Fira Code', monospace;
-    color: #f8f9fa;
-    text-shadow: 0 0 10px #00f2fe, 0 0 20px #00f2fe;
-    margin-bottom: 1rem;
-    letter-spacing: 2px;
-}
-.colon {
-    animation: blink 1s infinite;
-}
-@keyframes blink {
-    50% { opacity: 0.3; }
-}
-.clock-label {
-    font-size: 0.65rem;
-    color: #a0aec0;
-    font-family: 'Fira Code', monospace;
-    margin-bottom: 1.5rem;
-}
-.control-btn {
-    background: linear-gradient(135deg, #00f2fe, #4facfe);
-    color: #070913;
-    border: none;
-    border-radius: 8px;
-    padding: 0.6rem 1.5rem;
-    font-weight: 700;
-    font-size: 0.8rem;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
-    transition: all 0.2s ease;
-}
-.control-btn:hover {
-    box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
-    transform: translateY(-1px);
-}`;
-            } else if (cleanPrompt.includes('stopwatch') || cleanPrompt.includes('timer')) {
-                name = "Cyberpunk Chrono Frame";
-                desc = "High-fidelity stopwatch interface with ambient orange accents.";
-                html = `
-<div class="chrono-frame">
-    <div class="chrono-title">⚡ CHRONO PIPELINE</div>
-    <div class="chrono-time" id="stopwatch-display">00:00.00</div>
-    <div class="chrono-controls">
-        <button class="chrono-btn" id="chrono-start">START</button>
-        <button class="chrono-btn stop" id="chrono-stop">STOP</button>
-        <button class="chrono-btn reset" id="chrono-reset">RESET</button>
-    </div>
-</div>`;
-                css = `
-.chrono-frame {
-    background: rgba(13, 17, 33, 0.75);
-    border: 1px solid rgba(255, 110, 0, 0.3);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 110, 0, 0.1);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 2rem;
-    width: 320px;
-    margin: 2rem auto;
-    text-align: center;
-    font-family: 'Outfit', sans-serif;
-}
-.chrono-title {
-    font-family: 'Fira Code', monospace;
-    font-size: 0.7rem;
-    color: #ff6e00;
-    margin-bottom: 1rem;
-    letter-spacing: 1px;
-}
-.chrono-time {
-    font-size: 2.75rem;
-    font-weight: 800;
-    font-family: 'Fira Code', monospace;
-    color: #f8f9fa;
-    text-shadow: 0 0 10px #ff6e00;
-    margin-bottom: 1.5rem;
-}
-.chrono-controls {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-}
-.chrono-btn {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    padding: 0.5rem 1rem;
-    color: #f8f9fa;
-    font-size: 0.75rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.chrono-btn:hover {
-    border-color: #ff6e00;
-    background: rgba(255, 110, 0, 0.1);
-}
-.chrono-btn.stop:hover {
-    border-color: #ff0055;
-    background: rgba(255, 0, 85, 0.1);
-}
-.chrono-btn.reset:hover {
-    border-color: #a0aec0;
-    background: rgba(160, 174, 192, 0.1);
-}`;
-            } else {
-                // Default: Audio Visualizer or standard visual widget
-                name = "Radial Pulsar Deck";
-                desc = "Aesthetic ambient soundwaves layout with active feedback widgets.";
-                html = `
-<div class="pulsar-deck">
-    <div class="pulsar-circle" id="visualizer-core">
-        <div class="inner-pulse"></div>
-    </div>
-    <div class="eq-bars">
-        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-    </div>
-    <button class="pulse-trigger" id="audio-toggle">ENGAGE AUDIO STREAM</button>
-</div>`;
-                css = `
-.pulsar-deck {
-    background: rgba(13, 17, 33, 0.7);
-    border: 1px solid rgba(157, 78, 221, 0.3);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 15px rgba(157, 78, 221, 0.1);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 2rem;
-    width: 280px;
-    margin: 2rem auto;
-    text-align: center;
-    font-family: 'Outfit', sans-serif;
-}
-.pulsar-circle {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: rgba(157, 78, 221, 0.1);
-    border: 2px solid #9d4edd;
-    box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
-    margin: 0 auto 1.5rem auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-.inner-pulse {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #9d4edd;
-    box-shadow: 0 0 10px #9d4edd;
-}
-.eq-bars {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    height: 30px;
-    align-items: flex-end;
-    margin-bottom: 1.5rem;
-}
-.bar {
-    width: 6px;
-    height: 8px;
-    background: #9d4edd;
-    border-radius: 3px;
-}
-.pulse-trigger {
-    width: 100%;
-    background: linear-gradient(135deg, #9d4edd, #ff007f);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 0.6rem 1rem;
-    font-weight: 700;
-    font-size: 0.75rem;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(157, 78, 221, 0.2);
-    transition: all 0.2s ease;
-}
-.pulse-trigger:hover {
-    box-shadow: 0 0 15px rgba(157, 78, 221, 0.5);
-}`;
-            }
-
-            return {
-                id: `user-css-${state.customComponentIndex++}`,
-                name: name,
-                type: 'css',
-                creator: 'Akmal',
-                avatarClass: 'akmal',
-                avatarSymbol: '🎨',
-                desc: desc,
-                html: html,
-                css: css
-            };
-        }
-    },
-    Byte: {
-        avatar: '⚡',
-        name: 'BYTE v2.0',
-        role: 'JS Architect',
-        desc: 'Specializes in highly performant state operations, microservices, and interactive listeners.',
-        generate: (prompt) => {
-            const cleanPrompt = prompt.toLowerCase();
-            let name = "Logic Operations Core";
-            let js = "";
-            let desc = "Action behaviors and triggers.";
-
-            if (cleanPrompt.includes('clock') || cleanPrompt.includes('time')) {
-                name = "Live Clock Handler";
-                desc = "Action model that binds the current active system epoch to text spans and operates logs.";
-                js = `
-(function() {
-    console.log("Clock logic active!");
-    const hrs = document.getElementById('hours');
-    const mins = document.getElementById('minutes');
-    const secs = document.getElementById('seconds');
-    const toggleBtn = document.getElementById('btn-toggle-clock');
-    
-    let intervalId = null;
-    let isRunning = true;
-
-    function updateClock() {
-        const now = new Date();
-        if (hrs) hrs.textContent = String(now.getHours()).padStart(2, '0');
-        if (mins) mins.textContent = String(now.getMinutes()).padStart(2, '0');
-        if (secs) secs.textContent = String(now.getSeconds()).padStart(2, '0');
-    }
-
-    function start() {
-        intervalId = setInterval(updateClock, 1000);
-        updateClock();
-    }
-
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-            if (isRunning) {
-                clearInterval(intervalId);
-                toggleBtn.textContent = 'RESUME LOG';
-                toggleBtn.style.filter = 'hue-rotate(90deg)';
-            } else {
-                start();
-                toggleBtn.textContent = 'PAUSE LOG';
-                toggleBtn.style.filter = 'none';
-            }
-            isRunning = !isRunning;
-        });
-    }
-
-    start();
-})();`;
-            } else if (cleanPrompt.includes('stopwatch') || cleanPrompt.includes('timer')) {
-                name = "Chronometer Engine";
-                desc = "Precision timer state machine with complete start, stop, and delta reset bindings.";
-                js = `
-(function() {
-    console.log("Chronometer Logic Loaded!");
-    const display = document.getElementById('stopwatch-display');
-    const startBtn = document.getElementById('chrono-start');
-    const stopBtn = document.getElementById('chrono-stop');
-    const resetBtn = document.getElementById('chrono-reset');
-
-    let startTime = 0;
-    let elapsedTime = 0;
-    let timerInterval = null;
-
-    function formatTime(time) {
-        let diffInMin = time / 60000;
-        let mm = Math.floor(diffInMin);
-
-        let diffInSec = (diffInMin - mm) * 60;
-        let ss = Math.floor(diffInSec);
-
-        let diffInMs = (diffInSec - ss) * 100;
-        let ms = Math.floor(diffInMs);
-
-        let formattedMM = String(mm).padStart(2, '0');
-        let formattedSS = String(ss).padStart(2, '0');
-        let formattedMS = String(ms).padStart(2, '0');
-
-        return \`\${formattedMM}:\${formattedSS}.\${formattedMS}\`;
-    }
-
-    if (startBtn) {
-        startBtn.addEventListener('click', () => {
-            if (!timerInterval) {
-                startTime = Date.now() - elapsedTime;
-                timerInterval = setInterval(() => {
-                    elapsedTime = Date.now() - startTime;
-                    display.textContent = formatTime(elapsedTime);
-                }, 10);
-            }
-        });
-    }
-
-    if (stopBtn) {
-        stopBtn.addEventListener('click', () => {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        });
-    }
-
-    if (resetBtn) {
-        resetBtn.addEventListener('click', () => {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            elapsedTime = 0;
-            display.textContent = "00:00.00";
-        });
-    }
-})();`;
-            } else {
-                name = "Ambient Equalizer Sync";
-                desc = "Binds lo-fi stream toggle and simulates real-time graphic bars feedback loops.";
-                js = `
-(function() {
-    console.log("Ambient Audio Engine Active!");
-    const trigger = document.getElementById('audio-toggle');
-    const bars = document.querySelectorAll('.bar');
-    const core = document.querySelector('.inner-pulse');
-    
-    let isPlaying = false;
-    let animationInterval = null;
-
-    if (trigger) {
-        trigger.addEventListener('click', () => {
-            isPlaying = !isPlaying;
-            if (isPlaying) {
-                trigger.textContent = 'DISENGAGE STREAM';
-                trigger.style.filter = 'hue-rotate(180deg)';
-                if (core) core.style.animation = 'robot-float 1s ease-in-out infinite alternate';
-                
-                animationInterval = setInterval(() => {
-                    bars.forEach(bar => {
-                        const randomHeight = Math.floor(Math.random() * 26) + 4;
-                        bar.style.height = \`\${randomHeight}px\`;
-                        bar.style.transition = 'height 0.15s ease';
-                    });
-                }, 150);
-            } else {
-                trigger.textContent = 'ENGAGE AUDIO STREAM';
-                trigger.style.filter = 'none';
-                if (core) core.style.animation = 'none';
-                clearInterval(animationInterval);
-                bars.forEach(bar => {
-                    bar.style.height = '8px';
-                });
-            }
-        });
-    }
-})();`;
-            }
-
-            return {
-                id: `user-js-${state.customComponentIndex++}`,
-                name: name,
-                type: 'js',
-                creator: 'Akmal',
-                avatarClass: 'akmal',
-                avatarSymbol: '⚡',
-                desc: desc,
-                js: js
-            };
-        }
-    }
-};
-
-// --- Simulated Teammates Pre-loaded Cards ---
-const simulatedTeammateCards = [
-    {
-        id: 'team-js-1',
-        name: 'Ambient Equalizer Sync',
-        type: 'js',
-        creator: 'Wendy',
-        avatarClass: 'wendy',
-        avatarSymbol: '⚡',
-        desc: 'Simulates responsive equalizer bands and pulses vectors to lo-fi audio playback streams.',
-        js: `
-(function() {
-    console.log("Wendy's Equalizer Engine Active!");
-    const trigger = document.getElementById('audio-toggle');
-    const bars = document.querySelectorAll('.bar');
-    const core = document.querySelector('.inner-pulse');
-    
-    let isPlaying = false;
-    let animationInterval = null;
-
-    if (trigger) {
-        trigger.addEventListener('click', () => {
-            isPlaying = !isPlaying;
-            if (isPlaying) {
-                trigger.textContent = 'DISENGAGE STREAM';
-                trigger.style.filter = 'hue-rotate(180deg)';
-                if (core) core.style.animation = 'robot-float 1s ease-in-out infinite alternate';
-                
-                animationInterval = setInterval(() => {
-                    bars.forEach(bar => {
-                        const randomHeight = Math.floor(Math.random() * 26) + 4;
-                        bar.style.height = \`\${randomHeight}px\`;
-                        bar.style.transition = 'height 0.15s ease';
-                    });
-                }, 150);
-            } else {
-                trigger.textContent = 'ENGAGE AUDIO STREAM';
-                trigger.style.filter = 'none';
-                if (core) core.style.animation = 'none';
-                clearInterval(animationInterval);
-                bars.forEach(bar => {
-                    bar.style.height = '8px';
-                });
-            }
-        });
-    }
-})();`
-    },
-    {
-        id: 'team-css-1',
-        name: 'Glow Neon Clock Canvas',
-        type: 'css',
-        creator: 'Ibnu',
-        avatarClass: 'ibnu',
-        avatarSymbol: '🎨',
-        desc: 'Visual clock frame using frosted borders and bright radial background overlays.',
-        html: `
-<div class="neon-clock-card">
-    <div class="clock-display">
-        <span id="hours">12</span><span class="colon">:</span><span id="minutes">45</span><span class="colon">:</span><span id="seconds">00</span>
-    </div>
-    <div class="clock-label">ESTABLISHED SESSION // TURBO TIME</div>
-    <button class="control-btn" id="btn-toggle-clock">PAUSE LOG</button>
-</div>`,
-        css: `
-.neon-clock-card {
-    background: rgba(13, 17, 33, 0.7);
-    border: 1px solid rgba(0, 242, 254, 0.3);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 242, 254, 0.1);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 2rem;
-    text-align: center;
-    width: 300px;
-    margin: 2rem auto;
-    font-family: 'Outfit', sans-serif;
-}
-.clock-display {
-    font-size: 2.5rem;
-    font-weight: 800;
-    font-family: 'Fira Code', monospace;
-    color: #f8f9fa;
-    text-shadow: 0 0 10px #00f2fe, 0 0 20px #00f2fe;
-    margin-bottom: 1rem;
-    letter-spacing: 2px;
-}
-.colon {
-    animation: blink 1s infinite;
-}
-@keyframes blink {
-    50% { opacity: 0.3; }
-}
-.clock-label {
-    font-size: 0.65rem;
-    color: #a0aec0;
-    font-family: 'Fira Code', monospace;
-    margin-bottom: 1.5rem;
-}
-.control-btn {
-    background: linear-gradient(135deg, #00f2fe, #4facfe);
-    color: #070913;
-    border: none;
-    border-radius: 8px;
-    padding: 0.6rem 1.5rem;
-    font-weight: 700;
-    font-size: 0.8rem;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
-    transition: all 0.2s ease;
-}
-.control-btn:hover {
-    box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
-    transform: translateY(-1px);
-}`
-    },
-    {
-        id: 'team-js-2',
-        name: 'System Chronometer Engine',
-        type: 'js',
-        creator: 'Agung',
-        avatarClass: 'agung',
-        avatarSymbol: '⚡',
-        desc: 'Timer state bindings connecting start, stop and reset routines with millisecond decimals.',
-        js: `
-(function() {
-    console.log("Agung's Stopwatch Logic Loaded!");
-    const display = document.getElementById('stopwatch-display');
-    const startBtn = document.getElementById('chrono-start');
-    const stopBtn = document.getElementById('chrono-stop');
-    const resetBtn = document.getElementById('chrono-reset');
-
-    let startTime = 0;
-    let elapsedTime = 0;
-    let timerInterval = null;
-
-    function formatTime(time) {
-        let diffInMin = time / 60000;
-        let mm = Math.floor(diffInMin);
-
-        let diffInSec = (diffInMin - mm) * 60;
-        let ss = Math.floor(diffInSec);
-
-        let diffInMs = (diffInSec - ss) * 100;
-        let ms = Math.floor(diffInMs);
-
-        let formattedMM = String(mm).padStart(2, '0');
-        let formattedSS = String(ss).padStart(2, '0');
-        let formattedMS = String(ms).padStart(2, '0');
-
-        return \`\${formattedMM}:\${formattedSS}.\${formattedMS}\`;
-    }
-
-    if (startBtn) {
-        startBtn.addEventListener('click', () => {
-            if (!timerInterval) {
-                startTime = Date.now() - elapsedTime;
-                timerInterval = setInterval(() => {
-                    elapsedTime = Date.now() - startTime;
-                    display.textContent = formatTime(elapsedTime);
-                }, 10);
-            }
-        });
-    }
-
-    if (stopBtn) {
-        stopBtn.addEventListener('click', () => {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        });
-    }
-
-    if (resetBtn) {
-        resetBtn.addEventListener('click', () => {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            elapsedTime = 0;
-            display.textContent = "00:00.00";
-        });
-    }
-})();`
-    }
-];
-
-// --- Initial Scaffolding and DOM Element Caches ---
 document.addEventListener('DOMContentLoaded', () => {
     cacheDOMElements();
     setupEventListeners();
-    initializeStream();
 });
 
 let DOM = {};
 function cacheDOMElements() {
     DOM = {
-        lobbyScreen: document.getElementById('lobby-screen'),
-        btnEnterLab: document.getElementById('btn-enter-lab'),
-        charCards: document.querySelectorAll('.char-card'),
+        // Stages
+        searchStage: document.getElementById('search-stage'),
+        scanStage: document.getElementById('scan-stage'),
+        resultStage: document.getElementById('result-stage'),
         
-        robotAvatar: document.getElementById('robot-avatar'),
-        robotName: document.getElementById('robot-name'),
-        robotDesc: document.getElementById('robot-desc'),
+        // Input & Actions
+        usernameInput: document.getElementById('username-input'),
+        btnAnalyze: document.getElementById('btn-analyze'),
+        quickChips: document.querySelectorAll('.quick-chip'),
+        btnNewSearch: document.getElementById('btn-new-search'),
         
-        promptInput: document.getElementById('prompt-input'),
-        btnGenerate: document.getElementById('btn-generate'),
-        suggestionChips: document.querySelectorAll('.suggestion-chip'),
+        // Terminal log
+        terminalLog: document.getElementById('terminal-log'),
         
-        streamContainer: document.getElementById('stream-container'),
-        fusionDropzone: document.getElementById('fusion-dropzone'),
-        slotCss: document.getElementById('slot-css'),
-        slotJs: document.getElementById('slot-js'),
-        btnFuse: document.getElementById('btn-fuse'),
+        // Results Card (Column 1)
+        userAvatar: document.getElementById('user-avatar'),
+        userName: document.getElementById('user-name'),
+        userLogin: document.getElementById('user-login'),
+        recPosition: document.getElementById('rec-position'),
+        userBio: document.getElementById('user-bio'),
+        metaLocation: document.getElementById('meta-location'),
+        metaLocationRow: document.getElementById('meta-location-row'),
+        metaBlog: document.getElementById('meta-blog'),
+        metaBlogRow: document.getElementById('meta-blog-row'),
+        statFollowers: document.getElementById('stat-followers'),
+        statFollowing: document.getElementById('stat-following'),
         
-        sandboxIframe: document.getElementById('sandbox-iframe'),
-        drawerTabs: document.querySelectorAll('.drawer-tab'),
-        codeOutput: document.getElementById('code-output'),
-        btnCopyCode: document.getElementById('btn-copy-code'),
+        // Results Card (Column 2)
+        personaIcon: document.getElementById('persona-icon'),
+        personaTitle: document.getElementById('persona-title'),
+        personaDesc: document.getElementById('persona-desc'),
+        languageList: document.getElementById('language-list'),
+        metricStars: document.getElementById('metric-stars'),
+        metricForks: document.getElementById('metric-forks'),
+        metricRepos: document.getElementById('metric-repos'),
+        metricAge: document.getElementById('metric-age'),
         
-        particleCanvas: document.getElementById('fusion-particle-canvas')
+        // Results Card (Column 3)
+        ratingScore: document.getElementById('rating-score'),
+        ratingCircle: document.getElementById('rating-circle'),
+        powersList: document.getElementById('powers-list'),
+        reportText: document.getElementById('report-text')
     };
 }
 
-// --- Setup Event Handlers ---
 function setupEventListeners() {
-    // Character selection lobby interaction
-    DOM.charCards.forEach(card => {
-        card.addEventListener('click', () => {
-            DOM.charCards.forEach(c => c.classList.remove('active'));
-            card.classList.add('active');
-            state.selectedChar = card.dataset.char;
-            state.selectedRobot = card.dataset.robot;
-        });
+    // Search click
+    DOM.btnAnalyze.addEventListener('click', () => {
+        const username = DOM.usernameInput.value.trim();
+        if (username) runScreenerPipeline(username);
     });
 
-    // Enter main interface
-    DOM.btnEnterLab.addEventListener('click', () => {
-        DOM.lobbyScreen.classList.remove('active');
-        configureSelectedRobot();
+    // Enter press on search
+    DOM.usernameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const username = DOM.usernameInput.value.trim();
+            if (username) runScreenerPipeline(username);
+        }
     });
 
-    // Suggestion chips interaction
-    DOM.suggestionChips.forEach(chip => {
+    // Quick chips select
+    DOM.quickChips.forEach(chip => {
         chip.addEventListener('click', () => {
-            DOM.promptInput.value = chip.textContent;
+            const username = chip.dataset.user;
+            DOM.usernameInput.value = username;
+            runScreenerPipeline(username);
         });
     });
 
-    // Code generator click
-    DOM.btnGenerate.addEventListener('click', handleCodeGeneration);
-
-    // Dynamic slot triggers (Selection)
-    DOM.slotCss.addEventListener('click', () => clearSlot('css'));
-    DOM.slotJs.addEventListener('click', () => clearSlot('js'));
-
-    // Fusion Action Trigger
-    DOM.btnFuse.addEventListener('click', triggerFusionBlast);
-
-    // Code Output Tab switching
-    DOM.drawerTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            DOM.drawerTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            state.activeTab = tab.dataset.tab;
-            updateCodeOutputDisplay();
-        });
+    // New search button
+    DOM.btnNewSearch.addEventListener('click', () => {
+        switchStage('search-stage');
+        DOM.usernameInput.value = '';
+        DOM.usernameInput.focus();
     });
-
-    // Copy to clipboard click
-    DOM.btnCopyCode.addEventListener('click', copyCodeToClipboard);
 }
 
-// --- Configure active companion details ---
-function configureSelectedRobot() {
-    const config = robots[state.selectedRobot];
-    if (config) {
-        DOM.robotAvatar.textContent = config.avatar;
-        DOM.robotAvatar.className = 'robot-face-pulse';
+function switchStage(stageId) {
+    DOM.searchStage.classList.remove('active');
+    DOM.scanStage.classList.remove('active');
+    DOM.resultStage.classList.remove('active');
+    
+    document.getElementById(stageId).classList.add('active');
+}
+
+// --- Dynamic Terminal Scanning Log Animation ---
+function appendLogLine(text, delay) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            line.textContent = `> ${text}`;
+            DOM.terminalLog.appendChild(line);
+            DOM.terminalLog.scrollTop = DOM.terminalLog.scrollHeight;
+            resolve();
+        }, delay);
+    });
+}
+
+// --- Core Screener Execution Pipeline ---
+async function runScreenerPipeline(username) {
+    switchStage('scan-stage');
+    DOM.terminalLog.innerHTML = ''; // reset logs
+    
+    await appendLogLine("Opening secure socket stream with GitHub public REST API...", 200);
+    await appendLogLine("Establishing API handshake...", 300);
+    await appendLogLine(`Checking rate limit reserves...`, 200);
+    
+    try {
+        await appendLogLine(`Querying user core endpoints: https://api.github.com/users/${username}...`, 300);
         
-        // Dynamic colors based on companion
-        if (state.selectedRobot === 'Neon') {
-            DOM.robotAvatar.classList.add('cyan-glow');
-            DOM.robotDesc.textContent = config.desc;
-            DOM.robotName.textContent = config.name;
-        } else {
-            DOM.robotAvatar.classList.add('yellow-glow');
-            DOM.robotDesc.textContent = config.desc;
-            DOM.robotName.textContent = config.name;
+        // Fetch User details
+        const userRes = await fetch(`https://api.github.com/users/${username}`);
+        if (!userRes.ok) {
+            throw new Error(`GitHub user endpoint returned status ${userRes.status}`);
         }
+        const userData = await userRes.json();
+        
+        await appendLogLine(`[OK] User profile recovered for ${userData.name || username}.`, 200);
+        await appendLogLine(`Querying public repository index (limit 100)...`, 300);
+        
+        // Fetch User repos
+        const reposRes = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
+        if (!reposRes.ok) {
+            throw new Error(`GitHub repos endpoint returned status ${reposRes.status}`);
+        }
+        const reposData = await reposRes.json();
+        
+        await appendLogLine(`[OK] Successfully indexed ${reposData.length} public repositories.`, 200);
+        await appendLogLine(`Running quantum syntax classification engines...`, 400);
+        await appendLogLine(`Synthesizing language stack ratios...`, 300);
+        await appendLogLine(`Finalizing strategic recruitment scorecard...`, 300);
+        
+        const finalReport = compileDeveloperProfile(userData, reposData);
+        
+        // Short pause for dramatic effect
+        setTimeout(() => {
+            renderDashboardResults(finalReport);
+            switchStage('result-stage');
+        }, 400);
+
+    } catch (err) {
+        // Graceful Failover - GitHub rate limit or offline
+        console.warn("REST API connection error. Triggering local mock compiler models.", err);
+        await appendLogLine(`[WARN] GitHub connection rate-limited or offline: ${err.message}`, 200);
+        await appendLogLine(`[ACTION] Triggering local cognitive fallback profile models...`, 400);
+        await appendLogLine(`Matching pre-configured signature keys for "${username}"...`, 300);
+        
+        const fallbackReport = getMockFallbackProfile(username);
+        
+        await appendLogLine(`[OK] High-fidelity mock profile compiled successfully.`, 300);
+        await appendLogLine(`Rendering report card...`, 200);
+        
+        setTimeout(() => {
+            renderDashboardResults(fallbackReport);
+            switchStage('result-stage');
+        }, 400);
     }
 }
 
-// --- Assemble Collaborative Feed ---
-const creatorNames = {
-    'akmal': 'Akmal',
-    'wendy': 'Wendy',
-    'agung': 'Agung',
-    'ibnu': 'Ibnu'
+// ==========================================================================
+// Developer Assessment & Profiling Classification Engine
+// ==========================================================================
+function compileDeveloperProfile(userData, reposData) {
+    // 1. Language Aggregation
+    const langCounts = {};
+    let totalStars = 0;
+    let totalForks = 0;
+
+    reposData.forEach(repo => {
+        totalStars += repo.stargazers_count || 0;
+        totalForks += repo.forks_count || 0;
+        
+        if (repo.language) {
+            langCounts[repo.language] = (langCounts[repo.language] || 0) + 1;
+        }
+    });
+
+    // Convert language counts to percentages
+    const languages = Object.keys(langCounts).map(lang => {
+        return {
+            name: lang,
+            count: langCounts[lang],
+            percentage: Math.round((langCounts[lang] / reposData.length) * 100)
+        };
+    }).sort((a, b) => b.count - a.count);
+
+    // Limit to top 4 languages
+    const topLanguages = languages.slice(0, 4);
+
+    // 2. Classify Recommended Job Position
+    let position = "Full-Stack Software Engineer";
+    if (topLanguages.length > 0) {
+        const topLang = topLanguages[0].name.toLowerCase();
+        
+        let frontendWeight = (langCounts['JavaScript'] || 0) + (langCounts['HTML'] || 0) + (langCounts['CSS'] || 0) + (langCounts['TypeScript'] || 0);
+        let dataWeight = (langCounts['Python'] || 0) + (langCounts['Jupyter Notebook'] || 0) + (langCounts['R'] || 0);
+        let systemsWeight = (langCounts['C++'] || 0) + (langCounts['C'] || 0) + (langCounts['Rust'] || 0) + (langCounts['Go'] || 0);
+
+        if (frontendWeight > reposData.length * 0.5) {
+            position = totalStars > 100 ? "Senior Frontend Architect" : "Frontend Engineer";
+        } else if (dataWeight > reposData.length * 0.4) {
+            position = totalStars > 100 ? "Lead Data Scientist (AI/ML)" : "Data Analyst";
+        } else if (systemsWeight > reposData.length * 0.3) {
+            position = totalStars > 200 ? "Cloud Systems Architect" : "Systems Engineer";
+        } else if (topLang === 'java' || topLang === 'c#') {
+            position = "Enterprise Backend Architect";
+        } else if (topLang === 'php' || topLang === 'ruby' || topLang === 'python') {
+            position = "Backend Software Engineer";
+        }
+    }
+
+    // 3. Classify Developer Persona
+    let persona = {
+        title: "The Pragmatic Craftsman",
+        icon: "🛡️",
+        desc: "Focused on building reliable, clean, and highly structured software systems."
+    };
+
+    if (totalStars > 300) {
+        persona = {
+            title: "The Open Source Creator",
+            icon: "🔮",
+            desc: "Builds high-impact utilities that command massive community appreciation."
+        };
+    } else if (reposData.length > 35) {
+        persona = {
+            title: "The Prolific Hacker",
+            icon: "⚡",
+            desc: "High-velocity code output with diverse systems footprints."
+        };
+    } else if (userData.followers > totalStars && userData.followers > 50) {
+        persona = {
+            title: "The Community Evangelist",
+            icon: "📣",
+            desc: "A highly collaborative engineer with strong industry influence."
+        };
+    } else if (languages.length >= 4) {
+        persona = {
+            title: "The Polyglot Architect",
+            icon: "📚",
+            desc: "Expertly traverses multiple stacks with ease, building hybrid solutions."
+        };
+    }
+
+    // 4. Calculate Rating Score (Out of 100)
+    let score = 60; // Base score
+    score += Math.min(userData.followers ? Math.floor(userData.followers / 5) : 0, 15);
+    score += Math.min(Math.floor(totalStars / 10), 15);
+    score += Math.min(Math.floor(reposData.length / 2), 5);
+    
+    // Account age calculation
+    const ageYrs = Math.max(1, new Date().getFullYear() - new Date(userData.created_at).getFullYear());
+    score += Math.min(ageYrs * 2, 10);
+    
+    if (userData.bio) score += 2;
+    if (userData.blog) score += 3;
+    score = Math.min(score, 99); // Max score cap at 99 for standard profiles
+
+    // 5. Special Powers
+    const powers = [];
+    if (reposData.length > 20) powers.push({ icon: '⚡', label: 'Consistent Contributor' });
+    if (totalStars > 50) powers.push({ icon: '🔥', label: 'Community Impact' });
+    if (languages.length >= 3) powers.push({ icon: '📚', label: 'Polyglot Stack' });
+    if (ageYrs >= 6) powers.push({ icon: '🚀', label: 'Industry Veteran' });
+    
+    // Default powers if empty
+    if (powers.length < 3) powers.push({ icon: '🛠️', label: 'Modular Developer' });
+    if (powers.length < 3) powers.push({ icon: '🤝', label: 'Active Collaborator' });
+
+    // 6. AI Assessment Report
+    const topLangName = topLanguages.length > 0 ? topLanguages[0].name : 'various languages';
+    const report = `Based on a scanning analysis of their public digital trace, **${userData.name || userData.login}** represents a highly competent developer. Demonstrating strong core literacy in **${topLangName}** across **${reposData.length} public repositories**, their repository profile shows **${totalStars} stars** of community validation.\n\nWe recommend them as a prime fit for **${position}** roles, highlighting their special developer persona as **${persona.title}**. They will bring exceptional modularity, high coding velocity, and solid engineering habits to your technical sprints.`;
+
+    return {
+        avatar: userData.avatar_url,
+        name: userData.name || userData.login,
+        login: `@${userData.login}`,
+        position: position,
+        bio: userData.bio || "No public bio provided.",
+        location: userData.location || "Earth",
+        blog: userData.blog || "",
+        followers: userData.followers || 0,
+        following: userData.following || 0,
+        persona: persona,
+        topLanguages: topLanguages,
+        stars: totalStars,
+        forks: totalForks,
+        repos: reposData.length,
+        age: `${ageYrs} yr`,
+        score: score,
+        powers: powers,
+        report: report
+    };
+}
+
+// ==========================================================================
+// Pre-configured Mock Fallbacks (Wi-Fi failover / fast-pitch setup)
+// ==========================================================================
+const mockProfiles = {
+    torvalds: {
+        avatar: "https://avatars.githubusercontent.com/u/1024",
+        name: "Linus Torvalds",
+        login: "@torvalds",
+        position: "Lead Kernel Architect",
+        bio: "Creator of Git and Linux. Champion of the open source movement.",
+        location: "Portland, OR",
+        blog: "https://www.linuxfoundation.org",
+        followers: 185000,
+        following: 0,
+        persona: {
+            title: "The Systems God",
+            icon: "👑",
+            desc: "Legendary systems engineer, creator of Linux, Git, and modern open source culture."
+        },
+        topLanguages: [
+            { name: "C", percentage: 82 },
+            { name: "Shell", percentage: 10 },
+            { name: "Makefile", percentage: 5 },
+            { name: "Perl", percentage: 3 }
+        ],
+        stars: 245000,
+        forks: 58000,
+        repos: 7,
+        age: "15 yr",
+        score: 100, // 100/100 for the creator of Git!
+        powers: [
+            { icon: '👑', label: 'Kernel Creator' },
+            { icon: '🚀', label: 'Creator of Git' },
+            { icon: '🔥', label: 'Global Impact' },
+            { icon: '🛡️', label: 'C Legend' }
+        ],
+        report: "**Linus Torvalds** requires no introduction. As the original creator of both Linux and Git, Linus represents the pinnacle of modern computing foundation. His work forms the absolute baseline of global server, cloud, and collaborative version-control infrastructure. Classified as **The Systems God**, Linus brings unparalleled technical leadership, absolute systems efficiency, and core hardware/software interface integration capabilities."
+    },
+    gaearon: {
+        avatar: "https://avatars.githubusercontent.com/u/810438",
+        name: "Dan Abramov",
+        login: "@gaearon",
+        position: "Principal Frontend Architect",
+        bio: "Former React Core team member. Creator of Redux and React Hot Loader.",
+        location: "London, UK",
+        blog: "https://overreacted.io",
+        followers: 84000,
+        following: 120,
+        persona: {
+            title: "The UI Pioneer",
+            icon: "⚛️",
+            desc: "Co-creator of Redux and standard frontend patterns that define modern web applications."
+        },
+        topLanguages: [
+            { name: "JavaScript", percentage: 65 },
+            { name: "TypeScript", percentage: 25 },
+            { name: "HTML", percentage: 6 },
+            { name: "CSS", percentage: 4 }
+        ],
+        stars: 142000,
+        forks: 24000,
+        repos: 280,
+        age: "12 yr",
+        score: 98,
+        powers: [
+            { icon: '⚛️', label: 'React Pioneer' },
+            { icon: '⚡', label: 'Redux Creator' },
+            { icon: '📚', label: 'Community Mentor' },
+            { icon: '🔥', label: 'Frontend Evangelist' }
+        ],
+        report: "**Dan Abramov** is a cornerstone of modern frontend developer experiences. Having co-created Redux and served as a core leader of the React team at Meta, Dan has directly guided how millions of developers structure UI states worldwide. Classified as **The UI Pioneer**, Dan represents the absolute elite of modern state-management architecture, visual layout orchestration, and web optimization practices."
+    },
+    tj: {
+        avatar: "https://avatars.githubusercontent.com/u/25254",
+        name: "TJ Holowaychuk",
+        login: "@tj",
+        position: "Lead Cloud & Systems Architect",
+        bio: "Co-creator of Express.js, Koa, commander.js, and countless Node.js baseline libraries.",
+        location: "Victoria, BC",
+        blog: "https://apex.sh",
+        followers: 51000,
+        following: 50,
+        persona: {
+            title: "The Prolific Builder",
+            icon: "🚀",
+            desc: "Legendary pioneer who single-handedly wrote the baseline server libraries of Node.js."
+        },
+        topLanguages: [
+            { name: "Go", percentage: 40 },
+            { name: "JavaScript", percentage: 38 },
+            { name: "Stylus", percentage: 12 },
+            { name: "Shell", percentage: 10 }
+        ],
+        stars: 189000,
+        forks: 31000,
+        repos: 410,
+        age: "16 yr",
+        score: 99,
+        powers: [
+            { icon: '🚀', label: 'Express.js Creator' },
+            { icon: '⚡', label: 'Node.js Pioneer' },
+            { icon: '📚', label: 'Prolific Hacker' },
+            { icon: '🛡️', label: 'Systems Master' }
+        ],
+        report: "**TJ Holowaychuk** is a legendary figures in the server-side JavaScript history. Single-handedly authoring Express, Koa, and dozens of core packages, TJ's libraries form the backend framework of corporate giants globally. Classified as **The Prolific Builder**, TJ represents the absolute gold-standard in high-speed package architecting, modular design pattern execution, and high-performance server structures."
+    },
+    akmalariq: {
+        avatar: "https://avatars.githubusercontent.com/u/104576326?v=4",
+        name: "Akmal Ariq",
+        login: "@akmalariq",
+        position: "Lead Full-Stack Architect",
+        bio: "Building smart tools and highly responsive web platforms. Cloud Jakarta 2026 Developer.",
+        location: "Jakarta, Indonesia",
+        blog: "https://github.com/akmalariq",
+        followers: 48,
+        following: 32,
+        persona: {
+            title: "The Rapid Prototyper",
+            icon: "🔥",
+            desc: "Excellent engineering efficiency, focusing on rapid client deployments and clean logic."
+        },
+        topLanguages: [
+            { name: "JavaScript", percentage: 55 },
+            { name: "HTML", percentage: 20 },
+            { name: "CSS", percentage: 15 },
+            { name: "Go", percentage: 10 }
+        ],
+        stars: 32,
+        forks: 12,
+        repos: 18,
+        age: "4 yr",
+        score: 88,
+        powers: [
+            { icon: '🔥', label: 'Rapid Builder' },
+            { icon: '⚡', label: 'UI Architect' },
+            { icon: '📚', label: 'Full-Stack Fluid' },
+            { icon: '🤝', label: 'Team Catalyst' }
+        ],
+        report: "**Akmal Ariq** represents the highly agile developer class suited for high-stakes startups and fast product deployments. With strong literacy in **JavaScript** and modern frontend interfaces, Akmal's profile reveals exceptional design consistency, clean modularity, and strong execution efficiency. As **The Rapid Prototyper**, Akmal brings amazing energy, rapid-pacing output, and solid full-stack coordination to team sprints."
+    }
 };
 
-function initializeStream() {
-    state.activeCreator = creatorNames[state.selectedChar] || 'Akmal';
+function getMockFallbackProfile(username) {
+    const cleanUsername = username.toLowerCase().trim();
     
-    const isServed = window.location.protocol.startsWith('http');
-    if (isServed) {
-        console.log("Connecting to Real-Time SSE Stream at /api/stream...");
-        const eventSource = new EventSource('/api/stream');
-        
-        eventSource.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                if (data.type === 'init') {
-                    DOM.streamContainer.innerHTML = '';
-                    state.streamCards = [];
-                    // Populate initial historic cards in chronological order
-                    data.cards.forEach(card => {
-                        addCardToStream(card, false);
-                    });
-                } else if (data.type === 'new') {
-                    addCardToStream(data.card, true);
-                }
-            } catch (err) {
-                console.error("Failed to parse SSE payload", err);
-            }
-        };
-        
-        eventSource.onerror = (err) => {
-            console.warn("Real-time server connection unavailable. Running in simulated standalone mode.");
-            eventSource.close();
-            runOfflineSimulation();
-        };
-    } else {
-        runOfflineSimulation();
+    // Check match
+    if (mockProfiles[cleanUsername]) {
+        return mockProfiles[cleanUsername];
     }
+    
+    // Generate beautiful randomized profile based on the name!
+    const names = [
+        "Alex Rivera", "Sarah Chen", "Devon Miller", "Elena Rostova", 
+        "Tariq Mahmood", "Budi Santoso", "Linh Nguyen", "Chloe Dubois"
+    ];
+    const positions = [
+        "Senior Frontend Engineer", "Lead Backend Developer", "AI/ML Engineer", 
+        "Cloud Systems Specialist", "Full-Stack Software Craftsman", "DevOps Consultant"
+    ];
+    const bios = [
+        "Passionate about scalable architectures, UI aesthetics, and clean microservices.",
+        "Developing open-source web ecosystems and visual automation tools.",
+        "Data lover, python enthusiast, and deep learning researcher.",
+        "Systems designer focusing on secure Go/Rust pipelines and serverless deployment."
+    ];
+    const locations = ["Jakarta, ID", "Singapore", "San Francisco, CA", "Berlin, DE", "Tokyo, JP"];
+    const languages = [
+        [{ name: "JavaScript", percentage: 50 }, { name: "TypeScript", percentage: 30 }, { name: "CSS", percentage: 15 }, { name: "HTML", percentage: 5 }],
+        [{ name: "Python", percentage: 60 }, { name: "Jupyter Notebook", percentage: 25 }, { name: "C++", percentage: 10 }, { name: "Shell", percentage: 5 }],
+        [{ name: "Go", percentage: 45 }, { name: "Rust", percentage: 30 }, { name: "Shell", percentage: 15 }, { name: "Docker", percentage: 10 }],
+        [{ name: "PHP", percentage: 40 }, { name: "JavaScript", percentage: 35 }, { name: "SQL", percentage: 15 }, { name: "CSS", percentage: 10 }]
+    ];
+    const personas = [
+        { title: "The Prolific Hacker", icon: "⚡", desc: "High-velocity code output with diverse systems footprints." },
+        { title: "The Pragmatic Craftsman", icon: "🛡️", desc: "Focused on building reliable, clean, and highly structured software systems." },
+        { title: "The Polyglot Architect", icon: "📚", desc: "Expertly traverses multiple stacks with ease, building hybrid solutions." },
+        { title: "The Rapid Prototyper", icon: "🔥", desc: "Excellent engineering efficiency, focusing on rapid client deployments." }
+    ];
+
+    // Seed variables based on username length
+    const idx = username.length;
+    const name = names[idx % names.length];
+    const pos = positions[idx % positions.length];
+    const bio = bios[idx % bios.length];
+    const loc = locations[idx % locations.length];
+    const lang = languages[idx % languages.length];
+    const pers = personas[idx % personas.length];
+    
+    const countRepos = (idx * 3) + 8;
+    const countStars = (idx * 12) + 4;
+    const countForks = Math.floor(countStars / 3);
+    const scoreVal = Math.min(75 + (idx % 20), 96);
+    const ageYrs = (idx % 5) + 3;
+
+    const report = `Based on a cognitive mock classification, **${name}** represents a highly competent developer. Demonstrating strong core literacy in **${lang[0].name}** across **${countRepos} public repositories**, their repository profile shows **${countStars} stars** of community validation.\n\nWe recommend them as a prime fit for **${pos}** roles, highlighting their special developer persona as **${pers.title}**. They will bring exceptional modularity, high coding velocity, and solid engineering habits to your technical sprints.`;
+
+    return {
+        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${username}`, // Cool dynamic robot avatar!
+        name: name,
+        login: `@${username}`,
+        position: pos,
+        bio: bio,
+        location: loc,
+        blog: `https://github.com/${username}`,
+        followers: (idx * 8) + 12,
+        following: (idx * 3) + 4,
+        persona: pers,
+        topLanguages: lang,
+        stars: countStars,
+        forks: countForks,
+        repos: countRepos,
+        age: `${ageYrs} yr`,
+        score: scoreVal,
+        powers: [
+            { icon: '⚡', label: 'Rapid Builder' },
+            { icon: '📚', label: 'Polyglot Stack' },
+            { icon: '🚀', label: 'Industry Veteran' },
+            { icon: '🤝', label: 'Active Collaborator' }
+        ],
+        report: report
+    };
 }
 
-function runOfflineSimulation() {
-    DOM.streamContainer.innerHTML = '';
-    state.streamCards = [];
-    simulatedTeammateCards.forEach((card, index) => {
-        setTimeout(() => {
-            addCardToStream(card, true);
-        }, (index + 1) * 3000);
-    });
-}
+// ==========================================================================
+// Dashboard Render Manager
+// ==========================================================================
+function renderDashboardResults(data) {
+    // 1. Column 1: Identity Info
+    DOM.userAvatar.src = data.avatar;
+    DOM.userName.textContent = data.name;
+    DOM.userLogin.textContent = data.login;
+    DOM.recPosition.textContent = data.position;
+    DOM.userBio.textContent = data.bio;
+    
+    // Handle location row visibility
+    if (data.location) {
+        DOM.metaLocation.textContent = data.location;
+        DOM.metaLocationRow.classList.remove('hidden');
+    } else {
+        DOM.metaLocationRow.classList.add('hidden');
+    }
 
-function addCardToStream(card, triggerPulse = false) {
-    // Prevent duplicate entries from self-broadcast
-    if (state.streamCards.some(c => c.id === card.id)) return;
+    // Handle blog row visibility
+    if (data.blog) {
+        DOM.metaBlog.href = data.blog.startsWith('http') ? data.blog : `http://${data.blog}`;
+        DOM.metaBlog.textContent = data.blog.replace(/(^\w+:|^)\/\//, ''); // strip http/https
+        DOM.metaBlogRow.classList.remove('hidden');
+    } else {
+        DOM.metaBlogRow.classList.add('hidden');
+    }
+
+    DOM.statFollowers.textContent = formatNum(data.followers);
+    DOM.statFollowing.textContent = formatNum(data.following);
+
+    // 2. Column 2: Tech Arsenal
+    DOM.personaIcon.textContent = data.persona.icon;
+    DOM.personaTitle.textContent = data.persona.title;
+    DOM.personaDesc.textContent = data.persona.desc;
+
+    // Render Language stack
+    DOM.languageList.innerHTML = '';
+    const colorClasses = ['--accent-gold', '--accent-cyan', '--accent-purple', '--accent-green'];
     
-    state.streamCards.push(card);
-    
-    const cardEl = document.createElement('div');
-    cardEl.className = 'flow-card';
-    cardEl.id = card.id;
-    cardEl.innerHTML = `
-        <div class="card-header">
-            <div class="card-team-meta">
-                <div class="team-avatar ${card.avatarClass}">${card.avatarSymbol}</div>
-                <h4>${card.creator} // ${card.type.toUpperCase() === 'CSS' ? 'Neon' : 'Byte'}</h4>
+    data.topLanguages.forEach((lang, idx) => {
+        const color = `var(${colorClasses[idx % colorClasses.length]})`;
+        
+        const row = document.createElement('div');
+        row.className = 'lang-row';
+        row.innerHTML = `
+            <div class="lang-info">
+                <span>${lang.name}</span>
+                <span>${lang.percentage}%</span>
             </div>
-            <span class="card-type-badge ${card.type}">${card.type.toUpperCase()}</span>
-        </div>
-        <p class="card-desc">${card.name}</p>
-        <div class="card-snippet">${card.desc}</div>
-    `;
-
-    // Click on card selects it for the appropriate fusion slot
-    cardEl.addEventListener('click', () => {
-        selectCardForSlot(card);
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" style="background: ${color};"></div>
+            </div>
+        `;
+        DOM.languageList.appendChild(row);
+        
+        // Trigger fill animation on progress bar
+        setTimeout(() => {
+            row.querySelector('.progress-bar-fill').style.width = `${lang.percentage}%`;
+        }, 100);
     });
 
-    DOM.streamContainer.prepend(cardEl);
+    DOM.metricStars.textContent = formatNum(data.stars);
+    DOM.metricForks.textContent = formatNum(data.forks);
+    DOM.metricRepos.textContent = formatNum(data.repos);
+    DOM.metricAge.textContent = data.age;
 
-    // Dynamic Visual Spark alert for newly arrived asset
-    if (triggerPulse) {
-        cardEl.style.boxShadow = `0 0 20px ${card.type === 'css' ? 'var(--accent-cyan)' : 'var(--accent-yellow)'}`;
-        cardEl.style.transform = 'scale(1.02)';
-        setTimeout(() => {
-            cardEl.style.boxShadow = 'none';
-            cardEl.style.transform = 'none';
-        }, 1000);
-    }
-
-    // Auto-select card if it belongs to current active user profile
-    if (card.creator === state.activeCreator) {
-        selectCardForSlot(card);
-    }
-}
-
-// --- AI Generation & Broadcast Engine ---
-function handleCodeGeneration() {
-    const prompt = DOM.promptInput.value.trim();
-    if (!prompt) return;
-
-    // Toggle button loader
-    const btnText = DOM.btnGenerate.querySelector('.btn-text');
-    const btnLoader = DOM.btnGenerate.querySelector('.btn-loader');
-    btnText.textContent = "COMPILING CHANNELS...";
-    btnLoader.classList.remove('hidden');
-    DOM.btnGenerate.disabled = true;
-
-    // 1.5 seconds simulated compute pipeline
-    setTimeout(() => {
-        const activeRobot = robots[state.selectedRobot];
-        const newCard = activeRobot.generate(prompt);
-        
-        // Dynamic creator details based on profile setup
-        newCard.creator = state.activeCreator;
-        newCard.avatarClass = state.selectedChar;
-        newCard.avatarSymbol = state.selectedRobot === 'Neon' ? '🎨' : '⚡';
-
-        const isServed = window.location.protocol.startsWith('http');
-        if (isServed) {
-            // Serve via Local server, POST to broadcast
-            fetch('/api/push', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newCard)
-            })
-            .catch(err => {
-                console.warn("Failed to POST card, adding locally instead.", err);
-                addCardToStream(newCard, true);
-            });
-        } else {
-            // Offline fallback
-            addCardToStream(newCard, true);
-        }
-
-        // Restore button state
-        btnText.textContent = "RUN ROBOT PIPELINE";
-        btnLoader.classList.add('hidden');
-        DOM.btnGenerate.disabled = false;
-        DOM.promptInput.value = "";
-    }, 1500);
-}
-
-// --- Slot Mechanics & State ---
-function selectCardForSlot(card) {
-    if (card.type === 'css') {
-        state.cssSlotCard = card;
-        DOM.slotCss.innerHTML = `
-            <div class="slot-card-title">${card.name} <span>CSS Layout // ${card.creator}</span></div>
-        `;
-        DOM.slotCss.className = 'fusion-slot slot-filled';
-        DOM.slotCss.setAttribute('data-type', 'css');
-    } else if (card.type === 'js') {
-        state.jsSlotCard = card;
-        DOM.slotJs.innerHTML = `
-            <div class="slot-card-title">${card.name} <span>JS Engine // ${card.creator}</span></div>
-        `;
-        DOM.slotJs.className = 'fusion-slot slot-filled';
-        DOM.slotJs.setAttribute('data-type', 'js');
-    }
-
-    // Toggle Fusion button state
-    if (state.cssSlotCard && state.jsSlotCard) {
-        DOM.btnFuse.disabled = false;
-    }
-}
-
-function clearSlot(type) {
-    if (type === 'css') {
-        state.cssSlotCard = null;
-        DOM.slotCss.innerHTML = `<span class="slot-placeholder">DRAG OR SELECT CSS DESIGN</span>`;
-        DOM.slotCss.className = 'fusion-slot';
-        DOM.slotCss.removeAttribute('data-type');
-    } else if (type === 'js') {
-        state.jsSlotCard = null;
-        DOM.slotJs.innerHTML = `<span class="slot-placeholder">DRAG OR SELECT JS LOGIC</span>`;
-        DOM.slotJs.className = 'fusion-slot';
-        DOM.slotJs.removeAttribute('data-type');
-    }
-    DOM.btnFuse.disabled = true;
-}
-
-// ==========================================================================
-// Collaborative Fusion Chamber Mechanics (The "Wow" Action)
-// ==========================================================================
-function triggerFusionBlast() {
-    if (!state.cssSlotCard || !state.jsSlotCard) return;
-
-    // Create the flash burst overlay
-    const flash = document.createElement('div');
-    flash.className = 'fusion-flash';
-    document.body.appendChild(flash);
-    setTimeout(() => flash.remove(), 600);
-
-    // Launch high-fidelity canvas particle stream
-    initParticles();
+    // 3. Column 3: Performance Assessment & Radial Progress
+    DOM.ratingScore.textContent = data.score;
     
-    // Fuse files and render
+    // Set dash offset for SVG circle rating animation
+    const radius = DOM.ratingCircle.r.baseVal.value;
+    const circumference = radius * 2 * Math.PI;
+    DOM.ratingCircle.style.strokeDasharray = circumference;
+    DOM.ratingCircle.style.strokeDashoffset = circumference;
+    
     setTimeout(() => {
-        executeSandboxFusion();
+        const offset = circumference - (data.score / 100) * circumference;
+        DOM.ratingCircle.style.strokeDashoffset = offset;
     }, 150);
-}
 
-function executeSandboxFusion() {
-    const cssCard = state.cssSlotCard;
-    const jsCard = state.jsSlotCard;
-
-    // Construct the fused sandboxed environment structure
-    const fusedHTML = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Outfit:wght@400;700;800&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: transparent;
-            color: #f8f9fa;
-            font-family: 'Outfit', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        ${cssCard.css}
-    </style>
-</head>
-<body>
-    ${cssCard.html}
-    <script>
-        ${jsCard.js}
-    </script>
-</body>
-</html>`;
-
-    // Inject compiled doc into iframe
-    DOM.sandboxIframe.srcdoc = fusedHTML;
-
-    // Display fused outputs in drawer
-    updateCodeOutputDisplay();
-}
-
-function updateCodeOutputDisplay() {
-    if (!state.cssSlotCard || !state.jsSlotCard) {
-        DOM.codeOutput.textContent = "// Select elements and trigger COLLABORATIVE FUSE!";
-        return;
-    }
-
-    if (state.activeTab === 'html-css') {
-        DOM.codeOutput.textContent = `<!-- FUSED HTML CONTAINER -->\n${state.cssSlotCard.html}\n\n/* FUSED LAYOUT SHEET */\n${state.cssSlotCard.css}`;
-        DOM.codeOutput.className = 'language-css';
+    // Color code ring based on rating
+    if (data.score >= 95) {
+        DOM.ratingCircle.style.stroke = 'var(--accent-cyan)';
+        DOM.ratingScore.style.color = 'var(--accent-cyan)';
+    } else if (data.score >= 85) {
+        DOM.ratingCircle.style.stroke = 'var(--accent-gold)';
+        DOM.ratingScore.style.color = 'var(--accent-gold)';
     } else {
-        DOM.codeOutput.textContent = `/* FUSED FUNCTION ENGINE */\n${state.jsSlotCard.js}`;
-        DOM.codeOutput.className = 'language-javascript';
+        DOM.ratingCircle.style.stroke = 'var(--accent-orange)';
+        DOM.ratingScore.style.color = 'var(--accent-orange)';
     }
-}
 
-function copyCodeToClipboard() {
-    const code = DOM.codeOutput.textContent;
-    navigator.clipboard.writeText(code).then(() => {
-        const origText = DOM.btnCopyCode.textContent;
-        DOM.btnCopyCode.textContent = "Copied!";
-        DOM.btnCopyCode.style.color = "var(--accent-green)";
-        DOM.btnCopyCode.style.borderColor = "var(--accent-green)";
-        
-        setTimeout(() => {
-            DOM.btnCopyCode.textContent = origText;
-            DOM.btnCopyCode.style.color = "var(--text-secondary)";
-            DOM.btnCopyCode.style.borderColor = "var(--border-color)";
-        }, 1500);
+    // Render Core Powers
+    DOM.powersList.innerHTML = '';
+    data.powers.forEach(pow => {
+        const pill = document.createElement('div');
+        pill.className = 'power-pill';
+        pill.innerHTML = `<span>${pow.icon}</span> <span>${pow.label}</span>`;
+        DOM.powersList.appendChild(pill);
     });
+
+    // Render report text
+    // Replace markdown bold ** to HTML strong
+    DOM.reportText.innerHTML = data.report.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 }
 
-// --- Canvas Particle Animation Logic ---
-let particles = [];
-let animationFrameId = null;
-
-function initParticles() {
-    const canvas = DOM.particleCanvas;
-    const ctx = canvas.getContext('2d');
-    
-    // Set absolute size
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    particles = [];
-    const colors = ['#00f2fe', '#ffd166', '#9d4edd', '#ff007f', '#4facfe'];
-    
-    // Generate 120 radial burst points
-    const originX = canvas.width / 2;
-    const originY = canvas.height / 2;
-    
-    for (let i = 0; i < 120; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const velocity = Math.random() * 8 + 4;
-        
-        particles.push({
-            x: originX,
-            y: originY,
-            vx: Math.cos(angle) * velocity,
-            vy: Math.sin(angle) * velocity,
-            radius: Math.random() * 3 + 1,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            alpha: 1,
-            decay: Math.random() * 0.02 + 0.015
-        });
+function formatNum(num) {
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(1) + 'M';
     }
-    
-    if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    renderParticles();
-}
-
-function renderParticles() {
-    const canvas = DOM.particleCanvas;
-    const ctx = canvas.getContext('2d');
-    
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    let activeParticles = false;
-    
-    particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.alpha -= p.decay;
-        
-        if (p.alpha > 0) {
-            activeParticles = true;
-            ctx.save();
-            ctx.globalAlpha = p.alpha;
-            ctx.fillStyle = p.color;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-    });
-    
-    if (activeParticles) {
-        animationFrameId = requestAnimationFrame(renderParticles);
-    } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'k';
     }
+    return num;
 }

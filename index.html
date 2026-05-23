@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turbo Robots // Fusion Lab</title>
+    <title>GitScreen AI // GitHub Profile Screener</title>
     <!-- Google Fonts for state-of-the-art UI typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,145 +16,179 @@
 
     <header class="app-header">
         <div class="header-logo">
-            <div class="logo-icon">🤖</div>
-            <h1>TURBO ROBOTS <span class="accent-text">// FUSION LAB</span></h1>
+            <div class="logo-icon">🔮</div>
+            <h1>GITSCREEN <span class="accent-text">AI</span></h1>
         </div>
         <div class="header-status">
             <span class="status-dot pulsing"></span>
-            <span class="status-text">SESSION ACTIVE // ROOM: <a href="https://github.com/akmalariq/turbo-robot" target="_blank" id="repo-link">akmalariq/turbo-robot</a></span>
-            <a href="https://excalidraw.com/#room=20045e9f969c72920f85,hWqIHoNZerGmbyj5UFDC9Q" target="_blank" class="excalidraw-pill" id="excalidraw-link">🎨 Excalidraw Board</a>
+            <span class="status-text">GITHUB API HANDSHAKE // ESTABLISHED</span>
+            <a href="https://github.com/akmalariq/turbo-robot" target="_blank" class="github-pill">💻 Repository</a>
         </div>
     </header>
 
-    <!-- Initial Profile Setup Screen -->
-    <div id="lobby-screen" class="lobby-screen active">
-        <div class="lobby-card">
-            <h2>CHOOSE YOUR CYBERNETIC CO-PILOT</h2>
-            <p>Select your developer profile. Each comes with a specialized Turbo Robot companion to generate visual or functional code assets.</p>
-            <div class="character-grid">
-                <div class="char-card active" data-char="akmal" data-robot="Neon">
-                    <div class="char-avatar cyan-glow">🎨</div>
-                    <h3>Akmal // Neon</h3>
-                    <span class="role-pill cyan">CSS Wizard</span>
-                    <p class="desc">Specializes in glassmorphism, gradient styling, and premium aesthetic layouts.</p>
-                </div>
-                <div class="char-card" data-char="wendy" data-robot="Byte">
-                    <div class="char-avatar yellow-glow">⚡</div>
-                    <h3>Wendy // Byte</h3>
-                    <span class="role-pill yellow">JS Architect</span>
-                    <p class="desc">Specializes in event handling, state machine engines, and micro-animations.</p>
-                </div>
-                <div class="char-card" data-char="agung" data-robot="Schema">
-                    <div class="char-avatar purple-glow">🔮</div>
-                    <h3>Agung // Schema</h3>
-                    <span class="role-pill purple">DB Specialist</span>
-                    <p class="desc">Specializes in structuring clean datasets, API integration, and microservices.</p>
-                </div>
-                <div class="char-card" data-char="ibnu" data-robot="Refactor">
-                    <div class="char-avatar green-glow">⚙️</div>
-                    <h3>Ibnu // Refactor</h3>
-                    <span class="role-pill green">QA Engineer</span>
-                    <p class="desc">Specializes in writing clean unit tests, formatting, and performance tuning.</p>
-                </div>
-            </div>
-            <button id="btn-enter-lab" class="btn-primary glow-btn">ENTER FUSION LAB</button>
-        </div>
-    </div>
-
-    <!-- Main Workspace Dashboard -->
-    <main class="app-workspace">
-        <!-- LEFT: Command Center -->
-        <section class="panel command-center" id="command-center-panel">
-            <div class="panel-header">
-                <h2>COMMAND CENTER</h2>
-                <span class="panel-subtitle">PROMPT YOUR TURBO ROBOT</span>
-            </div>
-            <div class="panel-body">
-                <div class="selected-robot-card">
-                    <div class="robot-face-wrapper">
-                        <div class="robot-face-pulse" id="robot-avatar">🎨</div>
-                    </div>
-                    <div class="robot-meta">
-                        <h3 id="robot-name">NEON v3.5</h3>
-                        <span class="status-pill active">ONLINE</span>
-                        <p id="robot-desc">Awaiting UI layout instructions...</p>
-                    </div>
+    <main class="app-container">
+        <!-- STAGE 1: Search Console (Hero View) -->
+        <section id="search-stage" class="stage active">
+            <div class="search-hero">
+                <h2>ASSESS ANY DEVELOPER INSTANTLY</h2>
+                <p>Query the live GitHub REST API to compile language arsenals, performance metrics, and role classifications using our profiling engine.</p>
+                
+                <div class="search-box">
+                    <span class="input-symbol">@</span>
+                    <input type="text" id="username-input" placeholder="Enter GitHub username (e.g. gaearon, torvalds)..." autocomplete="off">
+                    <button id="btn-analyze" class="glow-btn">RUN AI ANALYSIS</button>
                 </div>
 
-                <div class="prompt-container">
-                    <label for="prompt-input" class="cyber-label">[SYSTEM://AWAITING_PROMPT] ></label>
-                    <textarea id="prompt-input" placeholder="Describe the component layout you want to build (e.g., 'Make a glowing neon digital clock with an interactive pause trigger')..."></textarea>
-                    <div class="prompt-suggestions">
-                        <span class="suggestion-chip">Neon Stopwatch</span>
-                        <span class="suggestion-chip">Audio Visualizer</span>
-                        <span class="suggestion-chip">Task Board</span>
-                    </div>
-                    <button id="btn-generate" class="btn-primary">
-                        <span class="btn-text">RUN ROBOT PIPELINE</span>
-                        <div class="btn-loader hidden"></div>
-                    </button>
+                <div class="quick-links">
+                    <span>Quick Profile Screens:</span>
+                    <span class="quick-chip" data-user="torvalds">Linus Torvalds</span>
+                    <span class="quick-chip" data-user="gaearon">Dan Abramov</span>
+                    <span class="quick-chip" data-user="tj">TJ Holowaychuk</span>
+                    <span class="quick-chip" data-user="akmalariq">Akmal</span>
                 </div>
             </div>
         </section>
 
-        <!-- CENTER: The Assembly Stream & Fusion Chamber -->
-        <section class="panel assembly-stream" id="assembly-stream-panel">
-            <div class="panel-header">
-                <h2>THE ASSEMBLY STREAM</h2>
-                <span class="panel-subtitle">LIVE TEAM WORKSTREAM</span>
-            </div>
-            <div class="panel-body flex-col">
-                <!-- Shared Team Stream -->
-                <div class="stream-container" id="stream-container">
-                    <!-- Cards will be populated dynamically -->
+        <!-- STAGE 2: Scanning Overlay (Loader) -->
+        <section id="scan-stage" class="stage">
+            <div class="scanner-card">
+                <div class="scanner-ring">
+                    <div class="scanner-pulse"></div>
+                    <div class="scanner-icon">🤖</div>
                 </div>
-
-                <!-- Central Fusion Chamber -->
-                <div class="fusion-chamber" id="fusion-dropzone">
-                    <div class="fusion-title">☢️ FUSION CHAMBER</div>
-                    <p class="fusion-subtitle">Combine your CSS layout card and a teammate's JS logic card here</p>
-                    <div class="fusion-slots">
-                        <div class="fusion-slot" id="slot-css" data-type="css">
-                            <span class="slot-placeholder">DRAG OR SELECT CSS DESIGN</span>
-                        </div>
-                        <div class="fusion-slot" id="slot-js" data-type="js">
-                            <span class="slot-placeholder">DRAG OR SELECT JS LOGIC</span>
-                        </div>
-                    </div>
-                    <button id="btn-fuse" class="btn-accent" disabled>COLLABORATIVE FUSE!</button>
+                <h3>COMPILING PROFILE DATA...</h3>
+                <p>Executing live handshake with GitHub REST API endpoints.</p>
+                <div class="terminal-log" id="terminal-log">
+                    <div class="log-line">> [OK] Opening socket stream...</div>
                 </div>
             </div>
         </section>
 
-        <!-- RIGHT: Visual Preview & Code Drawer -->
-        <section class="panel output-viewer" id="output-viewer-panel">
-            <div class="panel-header">
-                <h2>VISUAL LAUNCHPAD</h2>
-                <span class="panel-subtitle">LIVE COLLABORATIVE OUTPUT</span>
-            </div>
-            <div class="panel-body flex-col">
-                <!-- Sandboxed Render Window -->
-                <div class="sandbox-container">
-                    <iframe id="sandbox-iframe" sandbox="allow-scripts" src="about:blank"></iframe>
+        <!-- STAGE 3: Dashboard Report Card (Results) -->
+        <section id="result-stage" class="stage">
+            <div class="dashboard-grid">
+                
+                <!-- COLUMN 1: Identity & Classification -->
+                <div class="panel user-identity-panel">
+                    <div class="panel-header">
+                        <span class="panel-subtitle">IDENTITY & STATUS</span>
+                    </div>
+                    <div class="panel-body text-center">
+                        <div class="avatar-wrapper">
+                            <img id="user-avatar" src="" alt="Avatar">
+                        </div>
+                        <h2 id="user-name">John Doe</h2>
+                        <div id="user-login" class="user-handle">@johndoe</div>
+                        
+                        <div class="position-badge-card">
+                            <div class="badge-label">RECOMMENDED POSITION</div>
+                            <div id="rec-position" class="badge-value">Lead Systems Architect</div>
+                        </div>
+
+                        <p id="user-bio" class="user-bio">Frontend designer and software engineer.</p>
+
+                        <div class="meta-links">
+                            <div class="meta-item" id="meta-location-row"><span class="meta-icon">📍</span> <span id="meta-location">Location</span></div>
+                            <div class="meta-item" id="meta-blog-row"><span class="meta-icon">🔗</span> <a href="#" id="meta-blog" target="_blank">Portfolio</a></div>
+                        </div>
+
+                        <div class="social-stats">
+                            <div class="stat-box">
+                                <div class="num" id="stat-followers">0</div>
+                                <div class="lbl">Followers</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="num" id="stat-following">0</div>
+                                <div class="lbl">Following</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Combined Code Output Drawers -->
-                <div class="code-drawer">
-                    <div class="drawer-tabs">
-                        <button class="drawer-tab active" data-tab="html-css">Merged UI (HTML/CSS)</button>
-                        <button class="drawer-tab" data-tab="js">Merged Action (JS)</button>
-                        <button class="btn-copy" id="btn-copy-code">Copy Block</button>
+                <!-- COLUMN 2: Language Arsenal & Metrics -->
+                <div class="panel tech-arsenal-panel">
+                    <div class="panel-header">
+                        <span class="panel-subtitle">CODE QUANTUM & LANGUAGE ARSENAL</span>
                     </div>
-                    <div class="drawer-content">
-                        <pre><code class="language-css" id="code-output">// Select components to fuse</code></pre>
+                    <div class="panel-body">
+                        <!-- Developer Persona card -->
+                        <div class="persona-card">
+                            <div class="persona-icon" id="persona-icon">🛡️</div>
+                            <div>
+                                <h3 id="persona-title">The Prolific Hacker</h3>
+                                <p id="persona-desc">High velocity code output with diverse systems footprints.</p>
+                            </div>
+                        </div>
+
+                        <h3 class="section-title">CORE LANGUAGE STACK</h3>
+                        <div class="language-list" id="language-list">
+                            <!-- Populated dynamically -->
+                        </div>
+
+                        <h3 class="section-title">KEY REPOSITORY STATS</h3>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="sc-num" id="metric-stars">0</div>
+                                <div class="sc-lbl">Total Stars</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="sc-num" id="metric-forks">0</div>
+                                <div class="sc-lbl">Total Forks</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="sc-num" id="metric-repos">0</div>
+                                <div class="sc-lbl">Public Repos</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="sc-num" id="metric-age">0 yr</div>
+                                <div class="sc-lbl">Account Age</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- COLUMN 3: Performance Assessment & Strategic Report -->
+                <div class="panel assessment-panel">
+                    <div class="panel-header">
+                        <span class="panel-subtitle">AI SCREENING DECISION</span>
+                    </div>
+                    <div class="panel-body flex-col">
+                        <!-- AI Rating radial display -->
+                        <div class="rating-box-container">
+                            <div class="radial-progress-wrapper">
+                                <svg class="radial-ring" viewBox="0 0 100 100">
+                                    <circle class="ring-bg" cx="50" cy="50" r="40"></circle>
+                                    <circle class="ring-fg" id="rating-circle" cx="50" cy="50" r="40"></circle>
+                                </svg>
+                                <div class="rating-value" id="rating-score">94</div>
+                            </div>
+                            <div class="rating-label">
+                                <h3>AI RATING</h3>
+                                <p>Aggregate code health & impact score</p>
+                            </div>
+                        </div>
+
+                        <h3 class="section-title">CORE SPECIAL POWERS</h3>
+                        <div class="powers-list" id="powers-list">
+                            <!-- Populated dynamically -->
+                        </div>
+
+                        <h3 class="section-title">AI STRATEGIC RECRUITMENT REPORT</h3>
+                        <div class="report-box">
+                            <p id="report-text">Analysing profile commits and repositories...</p>
+                        </div>
+
+                        <button id="btn-new-search" class="btn-primary mt-auto">SCREEN ANOTHER ACCOUNT</button>
+                    </div>
+                </div>
+
             </div>
         </section>
     </main>
 
-    <!-- Particle impact canvas for Fusion event -->
-    <canvas id="fusion-particle-canvas" class="particle-canvas"></canvas>
+    <footer class="app-footer">
+        <p>GitScreen AI // Built with Antigravity IDE for Cloud Jakarta 2026</p>
+    </footer>
 
     <script src="app.js"></script>
 </body>
