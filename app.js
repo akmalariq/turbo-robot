@@ -1,5 +1,5 @@
 /* ==========================================================================
-   GitScreen AI — Core Application Logic & Classification Engine
+   TurboTalent AI — Core Application Logic & Classification Engine
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {

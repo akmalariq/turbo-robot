@@ -1,39 +1,44 @@
-# 🚀 Turbo Robot — Build with AI Cloud Jakarta 2026
+# 🔮 TurboTalent AI — GitHub Developer Screener & Classifier
 
-Welcome to the **Turbo Robot** official team collaboration space for the Build with AI Cloud Jakarta 2026 Hackathon!
+Welcome to **TurboTalent AI**, a high-end, SaaS-grade GitHub profile evaluation dashboard designed for high-velocity recruiting and developer assessment!
+
+Developed for the **Build with AI Cloud Jakarta 2026** Hackathon.
 
 ---
 
 ## 🔗 Collaboration Hub
 
 *   **GitHub Repository**: [akmalariq/turbo-robot](https://github.com/akmalariq/turbo-robot)
-*   **Git SSH Remote**: `git@github.com:akmalariq/turbo-robot.git`
-*   **Excalidraw Design Board**: [Collaborative Board](https://excalidraw.com/#room=20045e9f969c72920f85,hWqIHoNZerGmbyj5UFDC9Q)
+*   **Excalidraw Design Board**: [Collaborative Whiteboard](https://excalidraw.com/#room=20045e9f969c72920f85,hWqIHoNZerGmbyj5UFDC9Q)
 
 ---
 
-## ⏱️ Build Session Timeline
-*   **Start Time**: 14:45 PM
-*   **Submission & Showcase**: 16:20 PM (3-minute pitch + 1 slide deck)
-*   **Time Remaining**: ~1 Hour 20 Minutes
+## ⚙️ Features
+1.  **Direct GitHub API Integration**: Queries live public profile & repository REST endpoints dynamically in the browser.
+2.  **AI Skill & Language Profiling**: Measures repository counts, compiles language usage metrics, and presents them in a premium progress-graph dashboard.
+3.  **Role Classification Engine**: Automatically analyzes stacks to recommend standard job positions (e.g. *Lead Systems Architect*, *Senior Frontend Architect*).
+4.  **Developer Persona Characterization**: Evaluates community impact, repositories, and followers to describe coding habits (e.g., *The Prolific Hacker*, *The UI Pioneer*).
+5.  **Offline Rate-Limit Fallback**: Preloaded profiles for *Linus Torvalds*, *Dan Abramov*, *TJ Holowaychuk*, and *Akmal Ariq* guarantee a 100% stable, fast live demo regardless of network congestion or API rate limiting.
 
 ---
 
 ## 🛠️ Technology Stack
-*   **Core**: HTML5, Vanilla JavaScript (ES6+)
-*   **Styling**: Vanilla CSS3 (Custom modern themes: Dark Mode, Glassmorphism, Aurora gradients)
-*   **AI Engine**: Gemini 3.5 Flash via Antigravity IDE integration
+*   **Frontend**: Vanilla HTML5, CSS3, ES6+ JavaScript
+*   **Aesthetics**: Glassmorphism blur filters, glowing state indicators, Outfit and Fira Code custom Google Fonts (Linear/Vercel SaaS-inspired dark theme)
+*   **Backend Server**: Zero-dependency local Node.js server with Server-Sent Events (SSE) stream routing.
 
 ---
 
-## 📋 Hackathon Checklist
-- [x] Create GitHub Repository & set up local git.
-- [ ] Invite teammates as GitHub collaborators.
-- [ ] Add Excalidraw collaboration link above.
-- [ ] Select final product idea to build.
-- [ ] Create Implementation Plan & set up folder structure.
-- [ ] Develop Core Interface (HTML/CSS).
-- [ ] Connect AI/Gemini Logic (JavaScript).
-- [ ] Refine & polish UI animations.
-- [ ] Prepare 1-Slide Pitch Deck and working demo.
-- [ ] Submit via Google Form!
+## 🚀 How to Run Locally
+
+### 📶 Host Collaborative Session:
+Inside the root folder `/home/neo/projects/bwai-build`, launch the server:
+```bash
+node server.js
+```
+The server will output your local Wi-Fi access link:
+```
+📶 Wi-Fi Access: http://192.168.x.x:3000
+🏠 Local Host:   http://localhost:3000
+```
+Teammates on the same Wi-Fi network can navigate to the **Wi-Fi Access IP** in their browser to access the live dashboard in real-time!
