@@ -4,6 +4,7 @@
 
 let DOM = {};
 let screeningHistory = [];
+let currentHistoryFilter = 'all';
 
 document.addEventListener('DOMContentLoaded', () => {
     cacheDOMElements();
@@ -64,8 +65,9 @@ function cacheDOMElements() {
         btnSave: document.getElementById('btn-action-save'),
         btnExport: document.getElementById('btn-action-export'),
         
-        // Screening History List
-        historyList: document.getElementById('history-list')
+        // Screening History List & Filters
+        historyList: document.getElementById('history-list'),
+        historyFilterRow: document.getElementById('history-filter-row')
     };
 }
 
@@ -112,6 +114,19 @@ function setupEventListeners() {
     DOM.btnExport.addEventListener('click', () => {
         alert(`📄 Generating Assessment PDF...\nTurboTalent AI Candidate Scorecard for ${DOM.userName.textContent} has been exported successfully.`);
     });
+
+    // History Filter Pill click event listeners
+    if (DOM.historyFilterRow) {
+        const pills = DOM.historyFilterRow.querySelectorAll('.filter-pill');
+        pills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                pills.forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                currentHistoryFilter = pill.dataset.filter;
+                renderHistoryList();
+            });
+        });
+    }
 }
 
 function switchStage(stageId) {
@@ -735,8 +750,23 @@ function renderHistoryList() {
         DOM.historyList.innerHTML = `<div style="font-size:0.6rem; color:var(--text-muted); text-align:center; padding:1.25rem 0;">No active history in session.</div>`;
         return;
     }
+
+    // Apply active filter (all, frontend, systems, data)
+    let filtered = screeningHistory;
+    if (currentHistoryFilter === 'frontend') {
+        filtered = screeningHistory.filter(item => item.data.position.toLowerCase().includes('frontend') || item.data.position.toLowerCase().includes('ui'));
+    } else if (currentHistoryFilter === 'systems') {
+        filtered = screeningHistory.filter(item => item.data.position.toLowerCase().includes('systems') || item.data.position.toLowerCase().includes('kernel') || item.data.position.toLowerCase().includes('backend'));
+    } else if (currentHistoryFilter === 'data') {
+        filtered = screeningHistory.filter(item => item.data.position.toLowerCase().includes('data') || item.data.position.toLowerCase().includes('ml') || item.data.position.toLowerCase().includes('scientist') || item.data.position.toLowerCase().includes('analyst'));
+    }
+
+    if (filtered.length === 0) {
+        DOM.historyList.innerHTML = `<div style="font-size:0.6rem; color:var(--text-muted); text-align:center; padding:1.25rem 0;">No matching profiles in talent pool.</div>`;
+        return;
+    }
     
-    screeningHistory.forEach(item => {
+    filtered.forEach(item => {
         const activeClass = (DOM.userLogin && DOM.userLogin.textContent.toLowerCase() === item.login.toLowerCase()) ? 'active' : '';
         
         const itemEl = document.createElement('div');

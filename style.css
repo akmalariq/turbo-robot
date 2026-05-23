@@ -882,6 +882,38 @@ input#username-input::placeholder {
     color: var(--accent-primary);
 }
 
+/* Notion-Style Talent Pool Filter Pills */
+.filter-row {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.filter-pill {
+    font-size: 0.6rem;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+    background: var(--bg-sidebar);
+    color: var(--text-secondary);
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+}
+
+.filter-pill:hover {
+    background: rgba(55, 53, 47, 0.08);
+    color: var(--text-primary);
+}
+
+.filter-pill.active {
+    background: var(--bg-blue-soft);
+    color: var(--accent-primary);
+    border-color: rgba(26, 115, 232, 0.15);
+}
+
 .hidden {
     display: none !important;
 }
