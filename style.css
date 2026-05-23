@@ -1,0 +1,921 @@
+/* ==========================================================================
+   Turbo Robots // Fusion Lab — CSS Design System
+   ========================================================================== */
+
+:root {
+    /* Color Palette */
+    --bg-dark: #070913;
+    --bg-card: rgba(13, 17, 33, 0.65);
+    --border-color: rgba(255, 255, 255, 0.08);
+    
+    /* Neon Accents */
+    --accent-cyan: #00f2fe;
+    --accent-purple: #9d4edd;
+    --accent-yellow: #ffd166;
+    --accent-green: #06d6a0;
+    --accent-magenta: #ff007f;
+    --accent-blue: #4facfe;
+
+    /* Text Colors */
+    --text-primary: #f8f9fa;
+    --text-secondary: #a0aec0;
+    --text-muted: #64748b;
+
+    /* Typography */
+    --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: 'Fira Code', 'Courier New', Courier, monospace;
+
+    /* Layout & Shadow */
+    --glass-blur: blur(16px) saturate(180%);
+    --card-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0px rgba(255, 255, 255, 0.05);
+    --neon-glow-cyan: 0 0 15px rgba(0, 242, 254, 0.35);
+    --neon-glow-purple: 0 0 15px rgba(157, 78, 221, 0.35);
+}
+
+/* Base resets & scrollbars */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Beautiful custom thin cyber scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* ==========================================================================
+   Background Aurora Mesh (WOW effect)
+   ========================================================================== */
+.aurora-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(157, 78, 221, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(15, 18, 37, 1) 0%, rgba(7, 9, 19, 1) 100%);
+}
+
+/* ==========================================================================
+   App Header
+   ========================================================================== */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+    background: rgba(7, 9, 19, 0.6);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    font-size: 1.75rem;
+    animation: float 4s ease-in-out infinite;
+}
+
+.header-logo h1 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.accent-text {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header-status {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent-green);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-green);
+}
+
+.status-dot.pulsing {
+    animation: status-pulse 1.5s infinite;
+}
+
+.status-text {
+    color: var(--text-secondary);
+}
+
+.status-text a {
+    color: var(--accent-cyan);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.status-text a:hover {
+    text-shadow: 0 0 5px var(--accent-cyan);
+}
+
+.excalidraw-pill {
+    padding: 0.4rem 0.8rem;
+    border-radius: 30px;
+    background: rgba(255, 0, 127, 0.15);
+    border: 1px solid rgba(255, 0, 127, 0.4);
+    color: #ff007f !important;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.excalidraw-pill:hover {
+    background: rgba(255, 0, 127, 0.25);
+    box-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Lobby Profile Screen
+   ========================================================================== */
+.lobby-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+    background: rgba(7, 9, 19, 0.95);
+    backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.lobby-screen.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.lobby-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 3rem;
+    max-width: 900px;
+    width: 90%;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+}
+
+.lobby-card h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.lobby-card p {
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+}
+
+.character-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.char-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 1.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.char-avatar {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.3s ease;
+}
+
+.char-card h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.role-pill {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+}
+
+.role-pill.cyan { background: rgba(0, 242, 254, 0.1); color: var(--accent-cyan); border: 1px solid rgba(0, 242, 254, 0.2); }
+.role-pill.yellow { background: rgba(255, 209, 102, 0.1); color: var(--accent-yellow); border: 1px solid rgba(255, 209, 102, 0.2); }
+.role-pill.purple { background: rgba(157, 78, 221, 0.1); color: var(--accent-purple); border: 1px solid rgba(157, 78, 221, 0.2); }
+.role-pill.green { background: rgba(6, 214, 160, 0.1); color: var(--accent-green); border: 1px solid rgba(6, 214, 160, 0.2); }
+
+.char-card .desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* Hover & Active Character States */
+.char-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.char-card.active {
+    background: rgba(0, 242, 254, 0.04);
+    border-color: var(--accent-cyan);
+    box-shadow: var(--neon-glow-cyan);
+}
+
+.char-card.active .char-avatar {
+    transform: scale(1.1);
+    background: rgba(0, 242, 254, 0.1);
+}
+
+/* Colors specifically for selected avatars */
+.cyan-glow { text-shadow: 0 0 10px var(--accent-cyan); }
+.yellow-glow { text-shadow: 0 0 10px var(--accent-yellow); }
+.purple-glow { text-shadow: 0 0 10px var(--accent-purple); }
+.green-glow { text-shadow: 0 0 10px var(--accent-green); }
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+    color: #070913;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 2.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(0, 242, 254, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 25px rgba(0, 242, 254, 0.4);
+    filter: brightness(1.1);
+}
+
+/* ==========================================================================
+   Main Workspace Layout
+   ========================================================================== */
+.app-workspace {
+    display: grid;
+    grid-template-columns: 350px 1fr 380px;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    flex: 1;
+    overflow: hidden;
+    height: calc(100vh - 80px);
+}
+
+.panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    backdrop-filter: var(--glass-blur);
+}
+
+.panel-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.01);
+}
+
+.panel-header h2 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--text-primary);
+}
+
+.panel-subtitle {
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+}
+
+.panel-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==========================================================================
+   LEFT COLUMN: Command Center
+   ========================================================================== */
+.selected-robot-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.robot-face-wrapper {
+    position: relative;
+}
+
+.robot-avatar-active {
+    font-size: 2.25rem;
+}
+
+.robot-face-pulse {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    animation: robot-float 3s ease-in-out infinite;
+}
+
+.robot-meta h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+}
+
+.status-pill {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    margin-bottom: 0.4rem;
+}
+
+.status-pill.active {
+    background: rgba(6, 214, 160, 0.15);
+    color: var(--accent-green);
+    border: 1px solid rgba(6, 214, 160, 0.3);
+}
+
+.robot-meta p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Prompt inputs */
+.cyber-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+    margin-bottom: 0.5rem;
+}
+
+textarea#prompt-input {
+    width: 100%;
+    height: 120px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    resize: none;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+textarea#prompt-input:focus {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+}
+
+.prompt-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.suggestion-chip {
+    padding: 0.3rem 0.6rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.suggestion-chip:hover {
+    background: rgba(0, 242, 254, 0.08);
+    border-color: rgba(0, 242, 254, 0.3);
+    color: var(--text-primary);
+}
+
+#btn-generate {
+    width: 100%;
+    padding: 0.9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* ==========================================================================
+   CENTER COLUMN: Assembly Stream
+   ========================================================================== */
+.stream-container {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-right: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Code card components inside flow feed */
+.flow-card {
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+    cursor: grab;
+    position: relative;
+}
+
+.flow-card:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.flow-card.dragging {
+    opacity: 0.5;
+    border-color: var(--accent-cyan);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.card-team-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.team-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.team-avatar.akmal { box-shadow: 0 0 5px var(--accent-cyan); border: 1.5px solid var(--accent-cyan); }
+.team-avatar.wendy { box-shadow: 0 0 5px var(--accent-yellow); border: 1.5px solid var(--accent-yellow); }
+.team-avatar.agung { box-shadow: 0 0 5px var(--accent-purple); border: 1.5px solid var(--accent-purple); }
+.team-avatar.ibnu { box-shadow: 0 0 5px var(--accent-green); border: 1.5px solid var(--accent-green); }
+
+.card-team-meta h4 {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.card-type-badge {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 0.15rem 0.5rem;
+    border-radius: 30px;
+}
+
+.card-type-badge.css { background: rgba(0, 242, 254, 0.1); color: var(--accent-cyan); }
+.card-type-badge.js { background: rgba(255, 209, 102, 0.1); color: var(--accent-yellow); }
+
+.flow-card p.card-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+/* Miniature code code block */
+.card-snippet {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-height: 48px;
+}
+
+/* Fusion Chamber visual box */
+.fusion-chamber {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1.5px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.fusion-chamber.drag-over {
+    border-color: var(--accent-cyan);
+    background: rgba(0, 242, 254, 0.04);
+}
+
+.fusion-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--accent-magenta);
+    text-shadow: 0 0 10px rgba(255, 0, 127, 0.25);
+    margin-bottom: 0.25rem;
+}
+
+.fusion-subtitle {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+}
+
+.fusion-slots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.fusion-slot {
+    height: 100px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.fusion-slot:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.slot-placeholder {
+    font-size: 0.65rem;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+}
+
+/* Card loaded in slot */
+.slot-filled {
+    border-style: solid;
+    cursor: pointer;
+}
+
+.slot-filled[data-type="css"] {
+    border-color: var(--accent-cyan);
+    background: rgba(0, 242, 254, 0.04);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+}
+
+.slot-filled[data-type="js"] {
+    border-color: var(--accent-yellow);
+    background: rgba(255, 209, 102, 0.04);
+    box-shadow: 0 0 15px rgba(255, 209, 102, 0.1);
+}
+
+.slot-card-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.slot-card-title span {
+    display: block;
+    font-size: 0.55rem;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+.btn-accent {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent-magenta), var(--accent-purple));
+    color: var(--text-primary);
+    border: none;
+    border-radius: 10px;
+    padding: 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 0, 127, 0.25);
+}
+
+.btn-accent:hover:not(:disabled) {
+    transform: scale(1.02);
+    box-shadow: 0 5px 25px rgba(255, 0, 127, 0.55);
+}
+
+.btn-accent:disabled {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ==========================================================================
+   RIGHT COLUMN: Output Viewer & Sandbox
+   ========================================================================== */
+.sandbox-container {
+    flex: 1;
+    border: 1px solid var(--border-color);
+    background: #0f1225;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    min-height: 250px;
+    margin-bottom: 1.5rem;
+}
+
+iframe#sandbox-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+}
+
+.code-drawer {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.drawer-tabs {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.01);
+}
+
+.drawer-tab {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.75rem 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-right: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.drawer-tab.active {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--accent-cyan);
+    border-bottom: 2px solid var(--accent-cyan);
+}
+
+.btn-copy {
+    margin-left: auto;
+    margin-right: 1rem;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    padding: 0.25rem 0.6rem;
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-copy:hover {
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+}
+
+.drawer-content {
+    flex: 1;
+    overflow: auto;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.drawer-content pre {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--accent-green);
+}
+
+/* ==========================================================================
+   Fusion Particle Animation Canvas
+   ========================================================================== */
+.particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 99;
+}
+
+/* ==========================================================================
+   Animations Keyframes & Utilities
+   ========================================================================== */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes robot-float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-6px) scale(1.02); }
+}
+
+@keyframes status-pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; box-shadow: 0 0 15px var(--accent-green); }
+}
+
+/* Loader spinner */
+.btn-loader {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #000;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Fusion Impact Flash overlay */
+.fusion-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    z-index: 1000;
+    pointer-events: none;
+    animation: flash-blast 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes flash-blast {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* ==========================================================================
+   Responsive Adaptation
+   ========================================================================== */
+@media (max-width: 1200px) {
+    .app-workspace {
+        grid-template-columns: 320px 1fr;
+        grid-template-rows: auto auto;
+        height: auto;
+        overflow: visible;
+    }
+    
+    #output-viewer-panel {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 800px) {
+    .app-workspace {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+    }
+    
+    #command-center-panel, #assembly-stream-panel, #output-viewer-panel {
+        grid-column: auto;
+    }
+    
+    .app-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
