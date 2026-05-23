@@ -610,16 +610,16 @@ function renderDashboardResults(data) {
         DOM.ratingCircle.style.strokeDashoffset = offset;
     }, 150);
 
-    // Color code ring based on rating
+    // Color code ring based on rating (Notion Palette)
     if (data.score >= 95) {
-        DOM.ratingCircle.style.stroke = 'var(--accent-cyan)';
-        DOM.ratingScore.style.color = 'var(--accent-cyan)';
+        DOM.ratingCircle.style.stroke = 'var(--accent-emerald)';
+        DOM.ratingScore.style.color = 'var(--text-primary)';
     } else if (data.score >= 85) {
-        DOM.ratingCircle.style.stroke = 'var(--accent-gold)';
-        DOM.ratingScore.style.color = 'var(--accent-gold)';
+        DOM.ratingCircle.style.stroke = 'var(--accent-amber)';
+        DOM.ratingScore.style.color = 'var(--text-primary)';
     } else {
         DOM.ratingCircle.style.stroke = 'var(--accent-orange)';
-        DOM.ratingScore.style.color = 'var(--accent-orange)';
+        DOM.ratingScore.style.color = 'var(--text-primary)';
     }
 
     // Render Core Powers
