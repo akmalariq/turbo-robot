@@ -810,6 +810,78 @@ input#username-input::placeholder {
     color: var(--accent-primary);
 }
 
+/* Notion-Style Screening History List */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    text-align: left;
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+.history-item:hover {
+    background: var(--bg-sidebar);
+}
+
+.history-item.active {
+    background: var(--bg-blue-soft);
+    border-color: rgba(26, 115, 232, 0.15);
+}
+
+.history-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+}
+
+.history-meta {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 0;
+}
+
+.history-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.history-score-badge {
+    font-size: 0.6rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    padding: 0.05rem 0.3rem;
+    border-radius: 3px;
+    background: var(--bg-sidebar);
+    color: var(--text-secondary);
+}
+
+.history-item.active .history-score-badge {
+    background: var(--bg-panel);
+    color: var(--accent-primary);
+}
+
 .hidden {
     display: none !important;
 }

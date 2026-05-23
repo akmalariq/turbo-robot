@@ -2,12 +2,15 @@
    TurboTalent AI — Core Application Logic & Classification Engine
    ========================================================================== */
 
+let DOM = {};
+let screeningHistory = [];
+
 document.addEventListener('DOMContentLoaded', () => {
     cacheDOMElements();
     setupEventListeners();
+    loadScreeningHistory();
 });
 
-let DOM = {};
 function cacheDOMElements() {
     DOM = {
         // Stages
@@ -59,7 +62,10 @@ function cacheDOMElements() {
         compatLabel: document.getElementById('compat-label'),
         btnInvite: document.getElementById('btn-action-invite'),
         btnSave: document.getElementById('btn-action-save'),
-        btnExport: document.getElementById('btn-action-export')
+        btnExport: document.getElementById('btn-action-export'),
+        
+        // Screening History List
+        historyList: document.getElementById('history-list')
     };
 }
 
@@ -668,6 +674,9 @@ function renderDashboardResults(data) {
     // Render report text
     // Replace markdown bold ** to HTML strong
     DOM.reportText.innerHTML = data.report.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Save current profile to history
+    saveProfileToHistory(data);
 }
 
 function formatNum(num) {
@@ -678,4 +687,73 @@ function formatNum(num) {
         return (num / 1000).toFixed(1) + 'k';
     }
     return num;
+}
+
+// ==========================================================================
+// Screening Session History Management (Notion Style)
+// ==========================================================================
+function loadScreeningHistory() {
+    try {
+        const stored = localStorage.getItem('turbotalent_history');
+        if (stored) {
+            screeningHistory = JSON.parse(stored);
+            renderHistoryList();
+        }
+    } catch (e) {
+        console.error("Failed to load history from localstorage", e);
+    }
+}
+
+function saveProfileToHistory(profileData) {
+    // Prevent duplicate entries, moving active item to the top
+    screeningHistory = screeningHistory.filter(item => item.login.toLowerCase() !== profileData.login.toLowerCase());
+    
+    // Limit to last 5 candidates
+    screeningHistory.unshift({
+        login: profileData.login,
+        name: profileData.name,
+        avatar: profileData.avatar,
+        score: profileData.score,
+        data: profileData
+    });
+    
+    screeningHistory = screeningHistory.slice(0, 5);
+    
+    try {
+        localStorage.setItem('turbotalent_history', JSON.stringify(screeningHistory));
+        renderHistoryList();
+    } catch (e) {
+        console.error("Failed to save history", e);
+    }
+}
+
+function renderHistoryList() {
+    if (!DOM.historyList) return;
+    DOM.historyList.innerHTML = '';
+    
+    if (screeningHistory.length === 0) {
+        DOM.historyList.innerHTML = `<div style="font-size:0.6rem; color:var(--text-muted); text-align:center; padding:1.25rem 0;">No active history in session.</div>`;
+        return;
+    }
+    
+    screeningHistory.forEach(item => {
+        const activeClass = (DOM.userLogin && DOM.userLogin.textContent.toLowerCase() === item.login.toLowerCase()) ? 'active' : '';
+        
+        const itemEl = document.createElement('div');
+        itemEl.className = `history-item ${activeClass}`;
+        itemEl.innerHTML = `
+            <img src="${item.avatar}" class="history-avatar">
+            <div class="history-meta">
+                <span class="history-name">${item.name}</span>
+                <span class="history-score-badge">${item.score}</span>
+            </div>
+        `;
+        
+        // Dynamic click restores cached candidate scorecard instantly (Blindingly fast candidate switching!)
+        itemEl.addEventListener('click', () => {
+            renderDashboardResults(item.data);
+        });
+        
+        DOM.historyList.appendChild(itemEl);
+    });
 }
