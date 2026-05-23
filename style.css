@@ -3,36 +3,36 @@
    ========================================================================== */
 
 :root {
-    /* Notion Editorial Palette */
-    --bg-dark: #fbfbfa;          /* Notion Off-White Page Background */
-    --bg-panel: #ffffff;         /* Pure White Cards */
-    --bg-sidebar: #f1f1ef;       /* Notion Soft Gray Sidebar */
-    --border-color: rgba(55, 53, 47, 0.09); /* Notion Subtle Border */
-    --border-focus: #2383e2;     /* Notion Active Blue */
+    /* High-Contrast Professional Notion Palette */
+    --bg-dark: #f0f1f4;          /* Deeper gray page background for strong card separation */
+    --bg-panel: #ffffff;         /* Pure white card backgrounds */
+    --bg-sidebar: #e7e8eb;       /* Deeper gray sidebar for distinct contrast */
+    --border-color: rgba(55, 53, 47, 0.18); /* Crisper, darker borders for solid separation */
+    --border-focus: #1a73e8;     /* Vibrant focus blue */
     
-    /* Notion Brand Accents */
-    --accent-primary: #2383e2;   /* Notion Blue */
-    --accent-emerald: #0f7b5f;   /* Notion Green */
-    --accent-amber: #dfab01;     /* Notion Yellow */
-    --accent-orange: #d95d16;    /* Notion Orange */
-    --accent-crimson: #d44040;   /* Notion Red */
+    /* Vibrant Notion Accents (Contrast Optimized) */
+    --accent-primary: #1a73e8;   /* Bold Accent Blue */
+    --accent-emerald: #0b6623;   /* Deep Forest Green (Highly readable text) */
+    --accent-amber: #b08000;     /* Rich Amber Gold */
+    --accent-orange: #c84b00;    /* Dark Orange */
+    --accent-crimson: #b31412;   /* Dark Crimson */
     
-    /* Notion Soft Pastel Backgrounds */
-    --bg-blue-soft: rgba(35, 131, 226, 0.06);
-    --bg-green-soft: rgba(15, 123, 95, 0.06);
-    --bg-yellow-soft: rgba(223, 171, 1, 0.06);
+    /* Pastel Backgrounds with Richer Tints */
+    --bg-blue-soft: rgba(26, 115, 232, 0.09);
+    --bg-green-soft: rgba(11, 102, 35, 0.09);
+    --bg-yellow-soft: rgba(176, 128, 0, 0.09);
     
-    /* Text Hierarchy */
-    --text-primary: #37352f;     /* Notion Classic Charcoal */
-    --text-secondary: #7c7b77;   /* Muted Gray */
-    --text-muted: #9b9a97;       /* Disabled/Placeholder */
+    /* High-Contrast Typography Stack (Projector and Screen Optimized) */
+    --text-primary: #1f2023;     /* Deep charcoal black for perfect contrast */
+    --text-secondary: #4a4b4f;   /* Rich dark gray for highly readable subtext */
+    --text-muted: #6a6b70;       /* Solid gray for secondary labels and metadata */
 
     /* Typography */
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --font-mono: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
 
-    /* Shadows & Accents */
-    --card-shadow: 0px 1px 2px rgba(0, 0, 0, 0.02), 0px 4px 16px rgba(15, 15, 15, 0.03);
+    /* Crisp Soft Shadows */
+    --card-shadow: 0px 1px 3px rgba(0, 0, 0, 0.06), 0px 6px 20px rgba(0, 0, 0, 0.05);
 }
 
 /* Base resets & layouts */
