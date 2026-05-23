@@ -766,6 +766,50 @@ input#username-input::placeholder {
     to { opacity: 1; }
 }
 
+/* ATS Recruiter Actions & Compatibility Panel */
+.action-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin-bottom: 1.5rem;
+}
+
+.action-btn {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-primary);
+    padding: 0.55rem 0.85rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.action-btn:hover {
+    background: var(--bg-sidebar);
+    border-color: rgba(55, 53, 47, 0.3);
+}
+
+.compatibility-box {
+    background: var(--bg-blue-soft);
+    border: 1px solid rgba(26, 115, 232, 0.18);
+    margin-bottom: 1.5rem;
+}
+
+.compatibility-box .ring-fg {
+    stroke: var(--accent-primary);
+}
+
+.compatibility-box .rating-value {
+    color: var(--accent-primary);
+}
+
 .hidden {
     display: none !important;
 }

@@ -168,6 +168,21 @@
                             </div>
                         </div>
 
+                        <!-- Job Compatibility Box -->
+                        <div class="rating-box-container compatibility-box">
+                            <div class="radial-progress-wrapper">
+                                <svg class="radial-ring" viewBox="0 0 100 100">
+                                    <circle class="ring-bg" cx="50" cy="50" r="40"></circle>
+                                    <circle class="ring-fg" id="compat-circle" cx="50" cy="50" r="40"></circle>
+                                </svg>
+                                <div class="rating-value" id="compat-score">87%</div>
+                            </div>
+                            <div class="rating-label">
+                                <h3>JOB COMPATIBILITY</h3>
+                                <p id="compat-label">Matching with Senior Full-Stack Architect</p>
+                            </div>
+                        </div>
+
                         <h3 class="section-title">CORE SPECIAL POWERS</h3>
                         <div class="powers-list" id="powers-list">
                             <!-- Populated dynamically -->
@@ -176,6 +191,14 @@
                         <h3 class="section-title">AI STRATEGIC RECRUITMENT REPORT</h3>
                         <div class="report-box">
                             <p id="report-text">Analysing profile commits and repositories...</p>
+                        </div>
+
+                        <!-- ATS Hiring Actions Panel -->
+                        <h3 class="section-title">RECRUITER PIPELINE ACTIONS</h3>
+                        <div class="action-row">
+                            <button class="action-btn" id="btn-action-invite">📩 Invite to Tech Screen</button>
+                            <button class="action-btn" id="btn-action-save">⭐ Save to Talent Pool</button>
+                            <button class="action-btn" id="btn-action-export">📄 Export Assessment PDF</button>
                         </div>
 
                         <button id="btn-new-search" class="btn-primary mt-auto">SCREEN ANOTHER ACCOUNT</button>

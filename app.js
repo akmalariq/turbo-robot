@@ -51,7 +51,15 @@ function cacheDOMElements() {
         ratingScore: document.getElementById('rating-score'),
         ratingCircle: document.getElementById('rating-circle'),
         powersList: document.getElementById('powers-list'),
-        reportText: document.getElementById('report-text')
+        reportText: document.getElementById('report-text'),
+        
+        // Job Compatibility & ATS Actions
+        compatScore: document.getElementById('compat-score'),
+        compatCircle: document.getElementById('compat-circle'),
+        compatLabel: document.getElementById('compat-label'),
+        btnInvite: document.getElementById('btn-action-invite'),
+        btnSave: document.getElementById('btn-action-save'),
+        btnExport: document.getElementById('btn-action-export')
     };
 }
 
@@ -84,6 +92,19 @@ function setupEventListeners() {
         switchStage('search-stage');
         DOM.usernameInput.value = '';
         DOM.usernameInput.focus();
+    });
+
+    // ATS Action triggers
+    DOM.btnInvite.addEventListener('click', () => {
+        alert(`📩 Invitation Sent!\n${DOM.userName.textContent} has been successfully invited to your Technical Screening pipeline.`);
+    });
+
+    DOM.btnSave.addEventListener('click', () => {
+        alert(`⭐ Candidate Bookmarked!\n${DOM.userName.textContent} has been successfully added to your recruitment talent pool.`);
+    });
+
+    DOM.btnExport.addEventListener('click', () => {
+        alert(`📄 Generating Assessment PDF...\nTurboTalent AI Candidate Scorecard for ${DOM.userName.textContent} has been exported successfully.`);
     });
 }
 
@@ -621,6 +642,19 @@ function renderDashboardResults(data) {
         DOM.ratingCircle.style.stroke = 'var(--accent-orange)';
         DOM.ratingScore.style.color = 'var(--text-primary)';
     }
+
+    // 4. Job Compatibility Progress Render (Notion Theme)
+    const compatVal = data.compatScore || (data.score === 100 ? 98 : Math.min(80 + (data.score % 20), 98));
+    DOM.compatScore.textContent = `${compatVal}%`;
+    DOM.compatLabel.textContent = `Matching with ${data.position}`;
+    
+    DOM.compatCircle.style.strokeDasharray = circumference;
+    DOM.compatCircle.style.strokeDashoffset = circumference;
+    
+    setTimeout(() => {
+        const compatOffset = circumference - (compatVal / 100) * circumference;
+        DOM.compatCircle.style.strokeDashoffset = compatOffset;
+    }, 150);
 
     // Render Core Powers
     DOM.powersList.innerHTML = '';
